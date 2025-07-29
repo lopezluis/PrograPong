@@ -1,0 +1,7 @@
+#ifndef ITEM_ESPECIAL_H_
+#define ITEM_ESPECIAL_H_
+
+void inicializar_vector_item(Juego *);
+void item_procesar(Juego *);
+
+#endif // ITEM_ESPECIAL_H_
