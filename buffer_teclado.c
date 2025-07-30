@@ -1,9 +1,15 @@
 #include <time.h>    // por clock_t, clock, CLOCKS_PER_SEC
-#include <ncurses.h> // por getch
+#include <ncurses.h> // por getch, mvaddstr, refresh
+#include "juego.h"   // por Juego
 
-void vaciar_buffer_teclado(void)
+void vaciar_buffer_teclado(Juego *juego)
 {
+    mvaddstr(juego->altoTablero + 3, 40, "Vaciando buffer de teclado...");
+    refresh();
+    // 5 segundos para que el jugador reaccione a que debe soltar las teclas
     clock_t fin_vaciado = clock() + (5 * CLOCKS_PER_SEC);
     // Vaciar el buffer de caracteres, nótese que aquí hay necesidad de hacer una evaluación completa de la condición
     while((clock() < fin_vaciado) & getch());
+    mvaddstr(juego->altoTablero + 3, 40, "                             ");
+    refresh();
 }

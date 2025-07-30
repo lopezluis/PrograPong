@@ -32,8 +32,6 @@ unsigned char finalizar_juego(Juego *juego, unsigned char abandono)
     }
     if((juego->puntos > 0) && (juego->puntos > ultimo_mejor_puntaje(juego)))
     {
-        mvaddstr(juego->altoTablero + 3, 40, "Ha ingresado en el hall of fame.        ");
-        refresh();
         agregar_nuevo_record(juego, juego->puntos);
         guardar_tabla_mejores_puntajes(juego);
     }
@@ -131,14 +129,12 @@ void juego_correr(Juego *juego)
                 break;
             case ACCION_PAUSA:  // Pausar ejecución del juego
                 {
-                    mvaddstr(juego->altoTablero + 4, 40, "Vaciando buffer de teclado...");
-                    refresh();
-                    vaciar_buffer_teclado();
-                    mvaddstr(juego->altoTablero + 4, 40, "P para Principal u otra continuar");
+                    vaciar_buffer_teclado(juego);
+                    mvaddstr(juego->altoTablero + 4, 40, "P para Principal u otra continuar.");
                     refresh();
                     char caracter;
                     while((caracter = getch()) == ERR);
-                    mvaddstr(juego->altoTablero + 4, 40, "                                 ");
+                    mvaddstr(juego->altoTablero + 4, 40, "                                  ");
                     if((caracter == 'P') || (caracter == 'p'))
                     {
                         permanecer = PERMANECER_NO;

@@ -3,6 +3,7 @@
 #include <time.h>             // por CLOCKS_PER_SEC
 #include "juego.h"            // por Juego
 #include "reaccion_maquina.h" // por quitar_limite_reaccion_maquina
+#include "buffer_teclado.h"   // por vaciar_buffer_teclado
 
 const double deltaAngulo[90] = {1, 0.999847695156391, 0.999390827019096, 0.998629534754574, 0.997564050259824, 0.996194698091746, 0.994521895368273, 0.992546151641322,
 	0.99026806874157, 0.987688340595138, 0.984807753012208, 0.981627183447664, 0.978147600733806, 0.974370064785235, 0.970295726275996, 0.965925826289068, 0.961261695938319,
@@ -57,6 +58,7 @@ void inicializar_bola(Juego *juego)
 	// Cuando inicia una bola, la máquina tiene reacción plena
 	quitar_limite_reaccion_maquina(juego);
     mvaddch(COORDENADA_Y_PANTALLA_BOLA(juego), COORDENADA_X_PANTALLA_BOLA(juego), BOLA_CHAR);
+    vaciar_buffer_teclado(juego);
 }
 
 void mostrar_bola(Juego *juego)
@@ -81,7 +83,7 @@ void mover_bola(Juego *juego)
             // Asumo por sentido común, que la definición del ejercicio se refiere a cambios de dirección de la barra de la máquina
         }
 	}
-	if((juego->bola.angulo > 90) && (juego->bola.angulo < 180))
+	if((juego->bola.angulo >= 90) && (juego->bola.angulo < 180))
 	{
 		juego->bola.xFino -= deltaAngulo[90 - juego->bola.angulo + 90];
 		juego->bola.yFino -= deltaAngulo[juego->bola.angulo - 90];
@@ -91,7 +93,7 @@ void mover_bola(Juego *juego)
             juego->bola.angulo = 360 - juego->bola.angulo;
         }
 	}
-	if((juego->bola.angulo > 180) && (juego->bola.angulo < 270))
+	if((juego->bola.angulo >= 180) && (juego->bola.angulo < 270))
 	{
 		juego->bola.xFino -= deltaAngulo[juego->bola.angulo - 180];
 		juego->bola.yFino += deltaAngulo[90 - juego->bola.angulo + 180];
@@ -101,7 +103,7 @@ void mover_bola(Juego *juego)
             juego->bola.angulo = 360 - juego->bola.angulo;
         }
 	}
-	if(juego->bola.angulo > 270)
+	if(juego->bola.angulo >= 270)
 	{
         juego->bola.xFino += deltaAngulo[90 - juego->bola.angulo + 270];
         juego->bola.yFino += deltaAngulo[juego->bola.angulo - 270];

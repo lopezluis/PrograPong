@@ -183,9 +183,8 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
     }
     if(j < (CANTIDAD_HALL_OF_FAME - 1))
     {
-        mvaddstr(juego->altoTablero + 4, 40, "Vaciando buffer de teclado...           ");
-        refresh();
-        vaciar_buffer_teclado();
+        vaciar_buffer_teclado(juego);
+        mvaddstr(juego->altoTablero + 3, 40, "Ha ingresado en el hall of fame.     ");
         char nombre[10];
         unsigned short i = 0;
         for(; i < 9; i++)
@@ -194,7 +193,7 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
         }
         nombre[i] = '\x00';
         i = 0;
-        mvaddstr(juego->altoTablero + 4, 40, "Nombre hasta 9 caract:                  ");
+        mvaddstr(juego->altoTablero + 4, 40, "Nombre hasta 9 carácteres:           ");
         refresh();
         {
             char caracter;
@@ -208,7 +207,7 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
                     {
                         i--;
                         nombre[i] = ' ';
-                        mvaddstr(juego->altoTablero + 4, 63, nombre);
+                        mvaddstr(juego->altoTablero + 4, 67, nombre);
                         refresh();
                     }
                     break;
@@ -220,7 +219,7 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
                     {
                         nombre[i] = caracter;
                         i++;
-                        mvaddstr(juego->altoTablero + 4, 63, nombre);
+                        mvaddstr(juego->altoTablero + 4, 67, nombre);
                         refresh();
                     }
                     break;
@@ -232,6 +231,8 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
         time(&(juego->hallOfFame[j].instante));
         juego->hallOfFame[j].puntaje = puntajeObtenido;
         guardar_tabla_mejores_puntajes(juego);
+        mvaddstr(juego->altoTablero + 3, 40, "                                     ");
+        mvaddstr(juego->altoTablero + 4, 40, "                                     ");
     }
 }
 

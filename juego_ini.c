@@ -58,10 +58,8 @@ Juego *juego_ini(void)
     juego->fin_limite_reaccion_maquina = clock();
 
 	juego->puntos = 0;
-	// Las vidas se establecen el el menu principal
-	//juego->vidas = (juego->modo == AVENTURA) ? 5 : 10;
-	// El modo se establece desde el menú principal
-	//juego->modo = AVENTURA;
+	juego->modo = AVENTURA;
+	juego->vidas = 5;
 	juego->nivel = 1;
 
 	juego->bola.x = juego->bola.xFino = juego->anchoTablero / 2;
