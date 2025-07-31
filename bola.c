@@ -119,10 +119,10 @@ void mover_bola(Juego *juego)
     if ((juego->bola.x >= (juego->anchoTablero - 2 - BARRA_X)) && (juego->bola.y >= juego->maquina.y) && (juego->bola.y <= (juego->maquina.y + juego->maquina.largo_actual)))
     {
         // ¿La Bola se dirige hacia la esquina superior derecha?
-        if (juego->bola.angulo < 90)
+        if (juego->bola.angulo <= 90)
         {
             // Cambiar para que se dirija a la esquina superior izquierda y agregar un poco de azar al golpe
-            juego->bola.angulo = (90 - juego->bola.angulo + 90) + (rand() % 40) - 20;
+            juego->bola.angulo = (90 - juego->bola.angulo + 90) + (rand() % 41) - 20;
             // Si el ángulo queda muy vertical, acomodar
             if(juego->bola.angulo < 135)
             {
@@ -131,16 +131,12 @@ void mover_bola(Juego *juego)
         }
         else
         {
-            // ¿La Bola se dirige hacia la esquina inferior derecha?
-            if (juego->bola.angulo > 270)
+            // Cambiar para que se dirija a la esquina inferior izquierda y agregar un poco de azar al golpe
+            juego->bola.angulo = (90 - juego->bola.angulo + 450) + (rand() % 41) - 20;
+            // Si el ángulo queda muy vertical, acomodar
+            if(juego->bola.angulo > 225)
             {
-                // Cambiar para que se dirija a la esquina inferior izquierda y agregar un poco de azar al golpe
-                juego->bola.angulo = (90 - juego->bola.angulo + 450) + (rand() % 40) - 20;
-                // Si el ángulo queda muy vertical, acomodar
-                if(juego->bola.angulo > 225)
-                {
-                    juego->bola.angulo = 225;
-                }
+                juego->bola.angulo = 225;
             }
         }
     }
@@ -148,10 +144,10 @@ void mover_bola(Juego *juego)
     if ((juego->bola.x <= (1 + BARRA_X)) && (juego->bola.y >= juego->jugador.y) && (juego->bola.y <= (juego->jugador.y + juego->jugador.largo_actual)))
     {
         // ¿La Bola se dirige hacia la esquina superior izquierda?
-        if (juego->bola.angulo < 180)
+        if (juego->bola.angulo <= 180)
         {
             // Cambiar para que se dirija a la esquina superior derecha
-            juego->bola.angulo = (180 - juego->bola.angulo) + (rand() % 40) - 20;
+            juego->bola.angulo = (180 - juego->bola.angulo) + (rand() % 41) - 20;
             // Si el ángulo queda muy vertical, acomodar
             if(juego->bola.angulo > 45)
             {
@@ -160,16 +156,12 @@ void mover_bola(Juego *juego)
         }
         else
         {
-            // ¿La Bola se dirige hacia la esquina inferior izquierda?
-            if (juego->bola.angulo > 180)
+            // Cambiar para que se dirija a la esquina inferior derecha
+            juego->bola.angulo = (270 - juego->bola.angulo + 270) + (rand() % 41) - 20;
+            // Si el ángulo queda muy vertical, acomodar
+            if(juego->bola.angulo < 315)
             {
-                // Cambiar para que se dirija a la esquina inferior derecha
-                juego->bola.angulo = (270 - juego->bola.angulo + 270) + (rand() % 40) - 20;
-                // Si el ángulo queda muy vertical, acomodar
-                if(juego->bola.angulo < 315)
-                {
-                    juego->bola.angulo = 315;
-                }
+                juego->bola.angulo = 315;
             }
         }
     }

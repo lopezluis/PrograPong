@@ -163,50 +163,63 @@ void guardar_tabla_mejores_puntajes(Juego *juego)
 
 void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
 {
-	unsigned int i = CANTIDAD_HALL_OF_FAME - 1, j = i;
-	while((i > 0) && (juego->hallOfFame[i].puntaje < puntajeObtenido))
+	// Es requerimiento que se llame a esta función con (puntajeObtenido > 0) && (puntajeObtenido > juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].puntaje (último de la tabla)).
+	// Por las dudas lo verificamos, si este código se reutiliza, puede ser una verificación necesaria
+	if((puntajeObtenido = 0) && (puntajeObtenido <= juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].puntaje))
 	{
-		i--;
+		return;
 	}
-	// En este punto se pueden dar los siguientes casos j siempre es 4:
-	//  (i >= 0) && (juego->hallOfFame[i].puntaje >= puntajeObtenido) && (juego->hallOfFame[i + 1].puntaje < puntajeObtenido) cuando debe ingresar en la tabla en el lugar i + 1
-	//   o si (juego->hallOfFame[0].puntaje < puntajeObtenido) por ser record absoluto y debe ingresar en la tabla en el lugar 0
-	//  (i = 4) && (juego->hallOfFame[4].puntaje >= puntajeObtenido) cuando debe quedar fuera de la tabla
-	// Generamos el espacio
-	i = (juego->hallOfFame[0].puntaje < puntajeObtenido) ? 0 : i + 1;
-	while(i < j)
+	// Si la tabla está vacía, i = 0
+	unsigned int i = 0;
+	if(juego->hallOfFame[0].nombreJugador[0] != '\x00')
+	{
+		unsigned int j;
+		i = j = CANTIDAD_HALL_OF_FAME - 1;
+		while((i > 0) && (juego->hallOfFame[i].nombreJugador[0] == '\x00') && ((juego->hallOfFame[i].nombreJugador[0] != '\x00') && (juego->hallOfFame[i].puntaje < puntajeObtenido)))
+		{
+			i--;
+		}
+		if((juego->hallOfFame[i].nombreJugador[0] != '\x00') && (juego->hallOfFame[i].puntaje >= puntajeObtenido))
+		{
+			i++;
+		}
+		// i es el indice de la tabla juego->hallOfFame donde debe insertarse el puntaje obtenido
+		// Generamos el espacio
+		while(i < j)
+		{
+			strcpy(juego->hallOfFame[j].nombreJugador, juego->hallOfFame[j - 1].nombreJugador);
+			juego->hallOfFame[j].instante = juego->hallOfFame[j - 1].instante;
+			juego->hallOfFame[j].puntaje = juego->hallOfFame[j - 1].puntaje;
+			j--;
+		}
+	}
+	vaciar_buffer_teclado(juego);
+	mvaddstr(juego->altoTablero + 3, 40, "Ha ingresado en el hall of fame.     ");
+	mvaddstr(juego->altoTablero + 4, 40, "Nombre hasta 9 carácteres:           ");
+	refresh();
+	// Contexto para acotar la variable nombre e k
     {
-		strcpy(juego->hallOfFame[j].nombreJugador, juego->hallOfFame[j - 1].nombreJugador);
-		juego->hallOfFame[j].instante = juego->hallOfFame[j - 1].instante;
-		juego->hallOfFame[j].puntaje = juego->hallOfFame[j - 1].puntaje;
-		j--;
-    }
-    if(j < (CANTIDAD_HALL_OF_FAME - 1))
-    {
-        vaciar_buffer_teclado(juego);
-        mvaddstr(juego->altoTablero + 3, 40, "Ha ingresado en el hall of fame.     ");
         char nombre[10];
-        unsigned short i = 0;
-        for(; i < 9; i++)
+        unsigned short k = 0;
+        for(; k < 9; k++)
         {
-            nombre[i] = ' ';
+            nombre[k] = ' ';
         }
-        nombre[i] = '\x00';
-        i = 0;
-        mvaddstr(juego->altoTablero + 4, 40, "Nombre hasta 9 carácteres:           ");
-        refresh();
+        nombre[k] = '\x00';
+        k = 0;
+		// Acotamos continuar_ingresando
         {
-            char caracter;
             unsigned char continuar_ingresando = 1;
             while(continuar_ingresando)
             {
+				char caracter;
                 switch(caracter = getch())
                 {
                 case '\x08': // Backspace
-                    if(i > 0)
+                    if(k > 0)
                     {
-                        i--;
-                        nombre[i] = ' ';
+                        k--;
+                        nombre[k] = ' ';
                         mvaddstr(juego->altoTablero + 4, 67, nombre);
                         refresh();
                     }
@@ -215,10 +228,10 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
                     continuar_ingresando = 0;
                     break;
                 default:
-                    if((i < 9) && ((caracter == ' ') || ((caracter >= 'A') && (caracter <= 'Z')) || ((caracter >= 'a') && (caracter <= 'z'))))
+                    if((k < 9) && ((caracter == ' ') || ((caracter >= 'A') && (caracter <= 'Z')) || ((caracter >= 'a') && (caracter <= 'z'))))
                     {
-                        nombre[i] = caracter;
-                        i++;
+                        nombre[k] = caracter;
+                        k++;
                         mvaddstr(juego->altoTablero + 4, 67, nombre);
                         refresh();
                     }
@@ -226,14 +239,14 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
                 }
             }
         }
-        strcpy(juego->hallOfFame[j].nombreJugador, nombre);
-        // Obtener el instante actual
-        time(&(juego->hallOfFame[j].instante));
-        juego->hallOfFame[j].puntaje = puntajeObtenido;
-        guardar_tabla_mejores_puntajes(juego);
-        mvaddstr(juego->altoTablero + 3, 40, "                                     ");
-        mvaddstr(juego->altoTablero + 4, 40, "                                     ");
+        strcpy(juego->hallOfFame[i].nombreJugador, nombre);
     }
+	// Obtener el instante actual
+	time(&(juego->hallOfFame[i].instante));
+	juego->hallOfFame[i].puntaje = puntajeObtenido;
+	guardar_tabla_mejores_puntajes(juego);
+	mvaddstr(juego->altoTablero + 3, 40, "                                     ");
+	mvaddstr(juego->altoTablero + 4, 40, "                                     ");
 }
 
 unsigned int ultimo_mejor_puntaje(Juego *juego)
@@ -243,14 +256,5 @@ unsigned int ultimo_mejor_puntaje(Juego *juego)
     {
         return 0;
     }
-    unsigned int i = CANTIDAD_HALL_OF_FAME - 1;
-    while((i > 0) && (juego->hallOfFame[i].nombreJugador[0] == '\x00'))
-    {
-        i--;
-    }
-    if(juego->hallOfFame[i].nombreJugador[0] == '\x00')
-    {
-        return 0;
-    }
-    return juego->hallOfFame[i].puntaje;
+    return juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].puntaje;
 }

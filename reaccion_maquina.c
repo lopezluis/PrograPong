@@ -22,7 +22,7 @@ int maquina_con_limite_reaccion(Juego *juego)
     return ((juego->ini_limite_reaccion_maquina < ticks_reloj_actual) && (juego->fin_limite_reaccion_maquina > ticks_reloj_actual));
 }
 
-// Quitar límite de reacción, se llamará cuando jugador o máquina pierdfa un turno
+// Quitar límite de reacción, se llamará cuando jugador o máquina pierda un turno
 void quitar_limite_reaccion_maquina(Juego *juego)
 {
     juego->ini_limite_reaccion_maquina = juego->fin_limite_reaccion_maquina = clock();
