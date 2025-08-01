@@ -42,13 +42,14 @@ int main(int argc, char *argv[])
         // Verifir que malloc tuvo éxito
         if((strAux0 == NULL) || (strAux1 == NULL))
         {
+			// Muestra el error y finaliza la ejecución.
             mostrar_error("Error: No hay suficiente memoria para los textos auxiliares que muestran errores.\n\r");
         }
         strcpy(strAux0, "Error: No se permiten parámetros por línea de comandos.\n\r");
 		int i = 1;
 		while (i < argc)
 		{
-			if (sprintf(strAux1, "%s ¿%s?\n\r", strAux0, argv[i]) == EOF)
+			if (sprintf(strAux1, "%s¿%s?\n\r", strAux0, argv[i]) == EOF)
 			{
 				perror("Error interno");
 			}

@@ -166,6 +166,7 @@ void mover_bola(Juego *juego)
 	// Verificar si la Bola rebota con el jugador
     if ((juego->bola.x <= (1 + BARRA_X)) && (juego->bola.y >= juego->jugador.y) && (juego->bola.y <= (juego->jugador.y + juego->jugador.largo_actual)))
     {
+        // Corregir BUG aqui, juego->bola.y se iguala a 0 al rabotar en el jugador y no advierto dónde
         // ¿La Bola se dirige hacia la esquina superior izquierda?
         if (juego->bola.angulo <= 180)
         {

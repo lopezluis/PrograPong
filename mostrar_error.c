@@ -4,15 +4,17 @@
 void mostrar_error(const char *mensaje)
 {
     // Limpia la pantalla
-    clear();
+    //clear();
     // Mover el cursor a las coordenadas superior derecha y mostrar el mensaje
-    mvaddstr(0, 0, mensaje);
+    //mvaddstr(0, 0, mensaje);
     // Actualizar la pantalla
-    refresh();
+    //refresh();
     // Esperar una tecla
-    while(getch() == ERR);
+    //while(getch() == ERR);
     // Finalizar ncurses
     endwin();
+    // Mostrar el mensaje
+    puts(mensaje);
     // Salir al sistema operativo
     exit(EXIT_FAILURE);
     // TODO Ver si se puede crear una ventana similar al intento en el siguiente código

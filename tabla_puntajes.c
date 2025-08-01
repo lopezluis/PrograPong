@@ -1,5 +1,5 @@
 #include <stdlib.h>         // por exit, EXIT_SUCCESS, EXIT_FAILURE
-#include <ncurses.h>        // por clear, refresh
+#include <ncurses.h>        // por clear, refresh, mvaddstr
 #include <time.h>           // por strftime
 #include <stddef.h>         // por NULL
 #include <string.h>         // por strlen
@@ -194,8 +194,9 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
 		}
 	}
 	vaciar_buffer_teclado(juego);
-	mvaddstr(juego->altoTablero + 3, 40, "Ha ingresado en el hall of fame.     ");
-	mvaddstr(juego->altoTablero + 4, 40, "Nombre hasta 9 carácteres:           ");
+	mvaddstr(juego->altoTablero + 3, 40, "Ha ingresado en el hall of fame.        ");
+    // Recordar que cuando escribimos en juego->altoTablero + 4, debemos evitar la escritura de un caracter en la última fila y la última columna, para evitar el scroll de la pantalla completa
+	mvaddstr(juego->altoTablero + 4, 40, "Nombre hasta 9 carácteres:            ");
 	refresh();
 	// Contexto para acotar la variable nombre e k
     {
@@ -220,6 +221,7 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
                     {
                         k--;
                         nombre[k] = ' ';
+                        // El nombre como máximo tendrá 9 letras, por lo tanto, no desborda su lo escribimos a partir de la columna 67
                         mvaddstr(juego->altoTablero + 4, 67, nombre);
                         refresh();
                     }
@@ -245,8 +247,8 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
 	time(&(juego->hallOfFame[i].instante));
 	juego->hallOfFame[i].puntaje = puntajeObtenido;
 	guardar_tabla_mejores_puntajes(juego);
-	mvaddstr(juego->altoTablero + 3, 40, "                                     ");
-	mvaddstr(juego->altoTablero + 4, 40, "                                     ");
+	mvaddstr(juego->altoTablero + 3, 40, "                                        ");
+	mvaddstr(juego->altoTablero + 4, 40, "                                       ");
 }
 
 unsigned int ultimo_mejor_puntaje(Juego *juego)

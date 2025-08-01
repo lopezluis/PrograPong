@@ -20,11 +20,12 @@ unsigned char finalizar_juego(Juego *juego, unsigned char abandono)
     // Si abandona, puede haber ingresado igualmente en el hall of fame
     if(abandono)
     {
-        mvaddstr(juego->altoTablero + 4, 40, "¿Seguro abandona? Presione S o N.       ");
+        // Recordar que cuando escribimos en juego->altoTablero + 4, debemos evitar la escritura de un caracter en la última fila y la última columna, para evitar el scroll de la pantalla completa
+        mvaddstr(juego->altoTablero + 4, 40, "¿Seguro abandona? Presione S o N.      ");
         refresh();
         char caracter;
         while((caracter = getch()) == ERR);
-        mvaddstr(juego->altoTablero + 4, 40, "                                        ");
+        mvaddstr(juego->altoTablero + 4, 40, "                                       ");
         if((caracter == 'S') || (caracter == 's'))
         {
             confirma = ABANDONO_CONFIRMA;
@@ -37,7 +38,7 @@ unsigned char finalizar_juego(Juego *juego, unsigned char abandono)
     }
     else
     {
-        mvaddstr(juego->altoTablero + 4, 40, "Ha perdido. Presione una tecla.         ");
+        mvaddstr(juego->altoTablero + 4, 40, "Ha perdido. Presione una tecla.        ");
         refresh();
         while(getch() == ERR);
     }
@@ -58,7 +59,7 @@ void juego_correr(Juego *juego)
         // Verifir que malloc tuvo éxito
         if (strAux == NULL)
         {
-            if (fputs("Error: No hay suficiente memoria la cadena auxiliar para mostrar los muros.\n", stderr) == EOF)
+            if (fputs("Error: No hay suficiente memoria la cadena auxiliar para mostrar los muros.\n\r", stderr) == EOF)
             {
                 // La función perror mostrará el mensaje del parámetro ingresado, seguido de dos puntos, espacio, mensaje de error del sistema y salto de línea
                 perror("Error interno");
@@ -130,11 +131,11 @@ void juego_correr(Juego *juego)
             case ACCION_PAUSA:  // Pausar ejecución del juego
                 {
                     vaciar_buffer_teclado(juego);
-                    mvaddstr(juego->altoTablero + 4, 40, "P para Principal u otra continuar.");
+                    mvaddstr(juego->altoTablero + 4, 40, "P para Principal u otra continuar.     ");
                     refresh();
                     char caracter;
                     while((caracter = getch()) == ERR);
-                    mvaddstr(juego->altoTablero + 4, 40, "                                  ");
+                    mvaddstr(juego->altoTablero + 4, 40, "                                       ");
                     if((caracter == 'P') || (caracter == 'p'))
                     {
                         permanecer = PERMANECER_NO;
@@ -155,6 +156,11 @@ void juego_correr(Juego *juego)
         if((juego->jugador.ticks_efecto != 0) && (ticks_reloj_actual > juego->jugador.ticks_efecto))
         {
             borrar_toda_barra_jugador(juego);
+            // Si finaliza el efecto de bloqueo, entonces la posición y de la barra se pondrá al azar
+            if(juego->jugador.largo_actual == juego->altoTablero)
+            {
+                juego->jugador.y = rand() % (juego->altoTablero - BARRA_Y_INICIAL);
+            }
             // desactivar el efecto
             juego->jugador.largo_actual = BARRA_Y_INICIAL;
             // Si el jugador tiene un efecto de reducción y está posicionado abajo de todo, al restaurar al tamaño original, la barra del jugador romperá el muro, controlar este efecto
@@ -177,6 +183,11 @@ void juego_correr(Juego *juego)
         if((juego->maquina.ticks_efecto != 0) && (ticks_reloj_actual > juego->maquina.ticks_efecto))
         {
             borrar_toda_barra_maquina(juego);
+            // Si finaliza el efecto de bloqueo, entonces la posición y de la barra se pondrá al azar
+            if(juego->maquina.largo_actual == juego->altoTablero)
+            {
+                juego->maquina.y = rand() % (juego->altoTablero - BARRA_Y_INICIAL);
+            }
             // desactivar el efecto
             juego->maquina.largo_actual = BARRA_Y_INICIAL;
             // Si la maquina tiene un efecto de reducción y está posicionada abajo de todo, al restaurar al tamaño original, la barra de la maquina romperá el muro, controlar este efecto
@@ -224,8 +235,9 @@ void juego_correr(Juego *juego)
                         // Ganó en modo AVENTURA
                         permanecer = PERMANECER_NO;
                         // Recordar que el acho máximo de la pantalla, puede ser de hasta 80 caracteres, por lo tanto, los textos, nunca deben superar los 40 caracteres
-                        mvaddstr(juego->altoTablero + 3, 40, "¡Felicidades! Ah ganado.");
-                        mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para iniciar.");
+                        mvaddstr(juego->altoTablero + 3, 40, "¡Felicidades! Ah ganado.                ");
+                        // Recordar que cuando escribimos en juego->altoTablero + 4, debemos evitar la escritura de un caracter en la última fila y la última columna, para evitar el scroll de la pantalla completa
+                        mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para iniciar.       ");
                         refresh();
                         while(getch() == ERR);
                         finalizar_juego(juego, 0);
@@ -235,9 +247,9 @@ void juego_correr(Juego *juego)
             }
             inicializar_bola(juego);
             vaciar_buffer_teclado(juego);
-            mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para jugar.");
+            mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para jugar.         ");
             while(getch() == ERR);
-            mvaddstr(juego->altoTablero + 4, 40, "                              ");
+            mvaddstr(juego->altoTablero + 4, 40, "                                       ");
         }
         // Verificar si el jugador no pudo devolver la bola y pierde una vida
         if (juego->bola.x < 2)
@@ -255,10 +267,10 @@ void juego_correr(Juego *juego)
                 mvprintw(juego->altoTablero + 3, 22, "| Vidas: %02hu  ", juego->vidas);
                 inicializar_bola(juego);
                 vaciar_buffer_teclado(juego);
-                mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para jugar.");
+                mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para jugar.         ");
                 refresh();
                 while(getch() == ERR);
-                mvaddstr(juego->altoTablero + 4, 40, "                              ");
+                mvaddstr(juego->altoTablero + 4, 40, "                                       ");
             }
         }
 
