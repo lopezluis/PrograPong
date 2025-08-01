@@ -165,7 +165,7 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
 {
 	// Es requerimiento que se llame a esta función con (puntajeObtenido > 0) && (puntajeObtenido > juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].puntaje (último de la tabla)).
 	// Por las dudas lo verificamos, si este código se reutiliza, puede ser una verificación necesaria
-	if((puntajeObtenido = 0) && (puntajeObtenido <= juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].puntaje))
+	if((puntajeObtenido == 0) && (puntajeObtenido <= juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].puntaje))
 	{
 		return;
 	}
@@ -175,7 +175,7 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
 	{
 		unsigned int j;
 		i = j = CANTIDAD_HALL_OF_FAME - 1;
-		while((i > 0) && (juego->hallOfFame[i].nombreJugador[0] == '\x00') && ((juego->hallOfFame[i].nombreJugador[0] != '\x00') && (juego->hallOfFame[i].puntaje < puntajeObtenido)))
+		while((i > 0) && ((juego->hallOfFame[i].nombreJugador[0] == '\x00') || ((juego->hallOfFame[i].nombreJugador[0] != '\x00') && (juego->hallOfFame[i].puntaje < puntajeObtenido))))
 		{
 			i--;
 		}
