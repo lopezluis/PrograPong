@@ -4,6 +4,7 @@
 #include "juego.h"            // por Juego
 #include "reaccion_maquina.h" // por quitar_limite_reaccion_maquina
 #include "buffer_teclado.h"   // por vaciar_buffer_teclado
+#include "item.h"             // por bola_encima_item
 
 const double deltaAngulo[90] = {1, 0.999847695156391, 0.999390827019096, 0.998629534754574, 0.997564050259824, 0.996194698091746, 0.994521895368273, 0.992546151641322,
 	0.99026806874157, 0.987688340595138, 0.984807753012208, 0.981627183447664, 0.978147600733806, 0.974370064785235, 0.970295726275996, 0.965925826289068, 0.961261695938319,
@@ -41,8 +42,31 @@ void inicializar_bola(Juego *juego)
     mvaddch(COORDENADA_Y_PANTALLA_BOLA(juego), COORDENADA_X_PANTALLA_BOLA(juego), VACIO_CHAR);
     // Inicializar la Bola
     juego->bola.x = juego->bola.xFino = juego->anchoTablero / 2;
-    // La posición vertical de la bola, por definición es al azar, quitando el título, muros y información inferior
-    juego->bola.y = juego->bola.yFino = rand() % juego->altoTablero;
+    // La posición vertical de la bola, por definición es al azar, recordar que las coordenadas de la bola son con relación al tablero que va de 0 hasta juego->altoTablero, quitando barra de título, muros e información inferior
+    {
+        int bola_cae_sobre_item = 1;
+        while(bola_cae_sobre_item)
+        {
+            juego->bola.y = juego->bola.yFino = rand() % juego->altoTablero;
+            // Evitar que la Bola caiga sobre algún ítem
+            {
+                int i = 0;
+                while(i < ITEMS_NUM)
+                {
+                    if(bola_encima_item(juego, i))
+                    {
+                        bola_cae_sobre_item = 1;
+                        break;
+                    }
+                    i++;
+                }
+                if(i >= ITEMS_NUM)
+                {
+                    bola_cae_sobre_item = 0;
+                }
+            }
+        }
+    }
     // Angulo inicial es al azar entre 0 y 359 quitando el cono superior e inferior
     juego->bola.angulo = rand() % 360;
     if(((juego->bola.angulo > 45) && (juego->bola.angulo < 135)) || ((juego->bola.angulo > 225) && (juego->bola.angulo < 315)))
@@ -58,7 +82,6 @@ void inicializar_bola(Juego *juego)
 	// Cuando inicia una bola, la máquina tiene reacción plena
 	quitar_limite_reaccion_maquina(juego);
     mvaddch(COORDENADA_Y_PANTALLA_BOLA(juego), COORDENADA_X_PANTALLA_BOLA(juego), BOLA_CHAR);
-    vaciar_buffer_teclado(juego);
 }
 
 void mostrar_bola(Juego *juego)

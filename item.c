@@ -16,9 +16,14 @@ void inicializar_vector_item(Juego *juego)
     }
 }
 
-// Estas funciones: bola_encima_item e item_encima_otro, son privadas, no deben agregarse al encabezado de esta fuente
+// La función bola_encima_item se usa para verificar que la bola no caiga sobre un ítem al inicializarla
 int bola_encima_item(Juego *juego, int identificador_item)
 {
+    // ¿El ítem está inactivo?
+    if((juego->item[identificador_item].tipo & 0x80) == 0)
+    {
+        return 0;
+    }
     return(
         (juego->bola.x >= juego->item[identificador_item].x) &&
         (juego->bola.x <= (juego->item[identificador_item].x + 1)) &&
@@ -27,6 +32,7 @@ int bola_encima_item(Juego *juego, int identificador_item)
     );
 }
 
+// La función item_encima_otro es privada, no debe agregarse al encabezado de esta fuente
 unsigned char item_encima_otro(Juego *juego, unsigned char item)
 {
     unsigned char i = 0;

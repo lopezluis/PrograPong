@@ -92,29 +92,31 @@ void mover_maquina(Juego *juego)
     unsigned short medioMaquina = juego->maquina.y + (juego->maquina.largo_actual / 2);
 	if((medioMaquina > juego->bola.y) && (juego->maquina.y > 0))
 	{
-		if(juego->direccion_barra_maquina != HACIA_ARRIBA)
+		// juego->direccion_barra_maquina puede teler los valores INDEFINIDA, HACIA_ARRIBA y HACIA_ABAJO
+		if(juego->direccion_barra_maquina == HACIA_ABAJO)
         {
-            juego->direccion_barra_maquina = HACIA_ARRIBA;
             limitar_reaccion_maquina(juego);
         }
         else
 		{
             juego->maquina.y--;
 		}
+        juego->direccion_barra_maquina = HACIA_ARRIBA;
 	}
 	else
 	{
 		if((medioMaquina < juego->bola.y) && (juego->maquina.y < (juego->altoTablero - juego->maquina.largo_actual)))
 		{
-            if(juego->direccion_barra_maquina != HACIA_ABAJO)
+			// juego->direccion_barra_maquina puede teler los valores INDEFINIDA, HACIA_ARRIBA y HACIA_ABAJO
+            if(juego->direccion_barra_maquina == HACIA_ARRIBA)
             {
-                juego->direccion_barra_maquina = HACIA_ABAJO;
                 limitar_reaccion_maquina(juego);
             }
             else
             {
                 juego->maquina.y++;
             }
+            juego->direccion_barra_maquina = HACIA_ABAJO;
 		}
 	}
 	mostrar_barra_maquina(juego);

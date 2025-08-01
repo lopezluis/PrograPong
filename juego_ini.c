@@ -4,6 +4,7 @@
 #include "juego.h"            // por Juego, Modo AVENTURA, ESPACIO_NOMBRE_JUGADOR
 #include "tabla_puntajes.h"   // por leer_tabla_mejores_puntajes
 #include "tamanio_terminal.h" // por tamanio_terminal
+#include "bola.h"             // por inicializar_bola
 
 // Se crea la estructura del juego en heap, para luego devolverla y que no se destruya por ser local a juego_ini
 // Es conveniente devolver el puntero a la estructura para evitar la transferencia de memoria, en el caso que la cantidad de escacio necesario para la estructura crezca en el futuro
@@ -62,16 +63,7 @@ Juego *juego_ini(void)
 	juego->vidas = 5;
 	juego->nivel = 1;
 
-	juego->bola.x = juego->bola.xFino = juego->anchoTablero / 2;
-	// La posición vertical de la bola, por definición es al azar, recordar que las coordenadas de la bola con con relación al tablero que va de 0 hasta juego->altoTablero
-	juego->bola.y = juego->bola.yFino = rand() % juego->altoTablero;
-	// Angulo inicial es al azar entre 0 y 359 quitando el cono superior e inferior
-	juego->bola.angulo = rand() % 359;
-	if(((juego->bola.angulo > 45) && (juego->bola.angulo < 135)) || ((juego->bola.angulo > 225) && (juego->bola.angulo < 315)))
-	{
-		juego->bola.angulo += 90;
-	}
-	juego->bola.ticks_mover = CLOCKS_PER_SEC / 10;
+	inicializar_bola(juego);
 
     // Retorno del puntero a la estructura creada
 	return juego;

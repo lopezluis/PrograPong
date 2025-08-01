@@ -234,6 +234,7 @@ void juego_correr(Juego *juego)
                 }
             }
             inicializar_bola(juego);
+            vaciar_buffer_teclado(juego);
             mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para jugar.");
             while(getch() == ERR);
             mvaddstr(juego->altoTablero + 4, 40, "                              ");
@@ -253,6 +254,7 @@ void juego_correr(Juego *juego)
             {
                 mvprintw(juego->altoTablero + 3, 22, "| Vidas: %02hu  ", juego->vidas);
                 inicializar_bola(juego);
+                vaciar_buffer_teclado(juego);
                 mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para jugar.");
                 refresh();
                 while(getch() == ERR);
