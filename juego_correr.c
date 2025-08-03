@@ -21,11 +21,11 @@ unsigned char finalizar_juego(Juego *juego, unsigned char abandono)
     if(abandono)
     {
         // Recordar que cuando escribimos en juego->altoTablero + 4, debemos evitar la escritura de un caracter en la última fila y la última columna, para evitar el scroll de la pantalla completa
-        mvaddstr(juego->altoTablero + 4, 40, "¿Seguro abandona? Presione S o N.      ");
+        mvaddstr(juego->altoTablero + 4, 40, "¿Seguro abandona? Presione S o N.     ");
         refresh();
         char caracter;
         while((caracter = getch()) == ERR);
-        mvaddstr(juego->altoTablero + 4, 40, "                                       ");
+        mvaddstr(juego->altoTablero + 4, 40, "                                      ");
         if((caracter == 'S') || (caracter == 's'))
         {
             confirma = ABANDONO_CONFIRMA;

@@ -216,7 +216,7 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
 				char caracter;
                 switch(caracter = getch())
                 {
-                case '\x08': // Backspace
+                case '\x07': // Backspace
                     if(k > 0)
                     {
                         k--;

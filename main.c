@@ -9,6 +9,7 @@
 #include "juego_correr.h"   // por juego_correr
 #include "juego.h"          // por Juego
 #include "mostrar_error.h"  // por mostrar_error
+#include "bola.h"           // por inicializar_delta_angulo
 
 int main(int argc, char *argv[])
 {
@@ -66,6 +67,8 @@ int main(int argc, char *argv[])
         free(strAux1);
         strAux1 = NULL;
 	}
+	// Inicializar el cálculo de los deltas de los ángulos, simplemente construyo el vector una sola vez al iniciar el programa, lo ideal debería ser meter esto en un include, como una constante
+	inicializar_delta_angulo();
 	// Inicialización del juego
 	Juego *juego = juego_ini();
 	// Inicializar tabla de mejores puntajes, recordar que es un miembro de la estructura del juego

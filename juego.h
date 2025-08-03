@@ -91,9 +91,12 @@ typedef struct
 
 // Estructura Bola
 // La variable simbolo no es necesaria, dado que se define la macro BOLA_CHAR
-// Las coordenadas de la bola nunca valdrán un número negativo por lo que se define un tipo que solo acepta valores positivos
-// Se reemplaza dx y dy por el ángulo que lleva la bola
-// Los ticks_mover nunca serán negativos y se asume que no tendrá un valor mayor a 65535
+// Las coordenadas de la bola x e y nunca tendrán como valor, un número negativo, por lo que se define un tipo que solo acepta valores positivos
+// Se reemplaza dx y dy por el ángulo que lleva la Bola es de tipo unsigned short, por lo que el ángulo tandrá valores desde 0 a 65535.
+// Los pimeros 2 bits indican con un poco de imaginación, la esquina de la pantalla, hacia donde se dirige la Bola.
+// Entonces int(angulo/16384) devolverá un número de 0 a 3, correspondiente al cuadrante donde se dirige la Bola, 16384 es 2 elevado (a 16 bits - 2).
+// Definiendo angulo para que tenga estos valores, me ahorro tener que verificar si ocurre un desbordamiento del ángulo, es decir, el desbordamiento se autoacomoda.
+// Los ticks_mover nunca serán negativos y se asume que no tendrá un valor mayor a 65535. Igualmente los reemplazamos por en instante en que se debe mover la Bola.
 typedef struct
 {
 //	char simbolo;

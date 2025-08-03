@@ -5,7 +5,7 @@
 CC = gcc
 CFLAGS = -g3 -fno-inline -O0 -Wall -Wextra
 LDFLAGS = -Wall -Wextra
-LOADLIBS = -lncurses
+LOADLIBS = -lncurses -lm
 RM = /usr/bin/rm
 RMFLAGS = --verbose --force
 HALLOFFAME = hallOfFame.bin
