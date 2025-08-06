@@ -8,7 +8,7 @@ void iniciar_tabla_mejores_puntajes(Juego *);
 void finalizar_tabla_mejores_puntajes(Juego *);
 void leer_tabla_mejores_puntajes(Juego *);
 void agregar_nuevo_record(Juego *, unsigned int);
-void guardar_tabla_mejores_puntajes(Juego *);
 unsigned int ultimo_mejor_puntaje(Juego *);
+void guardar_tabla_mejores_puntajes(Juego *);
 
 #endif // TABLA_PUNTAJES_H_

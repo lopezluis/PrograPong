@@ -1,15 +1,17 @@
 #include <stdio.h>            // por stderr, fputs, perror, EOF (End-Of-File)
 #include <stddef.h>           // por NULL
 #include <stdlib.h>           // por rand, exit, EXIT_SUCCESS, EXIT_FAILURE, malloc (recordar que malloc.h está deprecado)
-#include "juego.h"            // por Juego, Modo AVENTURA, ESPACIO_NOMBRE_JUGADOR
+#include <time.h>             // por CLOCKS_PER_SEC
+#include "juego.h"            // por Juego, Modo AVENTURA, ESPACIO_NOMBRE_JUGADOR, TABLERO_X_MINIMO, TABLERO_Y_MINIMO
 #include "tabla_puntajes.h"   // por leer_tabla_mejores_puntajes
-#include "tamanio_terminal.h" // por tamanio_terminal
 #include "bola.h"             // por inicializar_bola
+#include "item.h"             // por inicializar_vector_item
+#include "tamanio_terminal.h" // por tamanio_terminal
 
 // Se crea la estructura del juego en heap, para luego devolverla y que no se destruya por ser local a juego_ini
 // Es conveniente devolver el puntero a la estructura para evitar la transferencia de memoria, en el caso que la cantidad de escacio necesario para la estructura crezca en el futuro
 
-// Inicialización de la estructura Juego
+// Inicialización de la estructura Juego, esta inicialización es por partida, no para cuando algún jugador pierde un punto
 Juego *juego_ini(void)
 {
 	// Reserva de memoria para la estructura en el heap
@@ -25,12 +27,12 @@ Juego *juego_ini(void)
 		exit(EXIT_FAILURE);
 	}
 
-    unsigned short anchoPantalla = 80, altoPantalla = 16;
+    unsigned short anchoPantalla = TABLERO_X_MINIMO, altoPantalla = TABLERO_Y_MINIMO;
     tamanio_terminal(&anchoPantalla, &altoPantalla);
     // Para verificar tamaño escaso, tener en cuenta que la tabla de puntajes tiene un alto de 12 líneas y el tablero no tiene sentido que sea < a
     // BARRA_Y_INICIAL(5) + 3 * 2(espacio superior e inferior para mover la barra) + 5 (titulo, 2 de estado y 2 muros)
-    // El ancho del tablero de 80 caracteres, es aceptable
-    if((anchoPantalla < 80) || (altoPantalla < 16))
+    // El ancho del tablero de TABLERO_X_MINIMO caracteres, es aceptable
+    if((anchoPantalla < TABLERO_X_MINIMO) || (altoPantalla < TABLERO_Y_MINIMO))
     {
 		if (fputs("Error: El área para desplegar el juego es muy pequeña.\nPor favor, agrande la pantalla antes de ejecutar el juego.\n", stderr) == EOF)
 		{
@@ -50,13 +52,14 @@ Juego *juego_ini(void)
 	// Inicialización de la dirección de la barra de la máquina
 	juego->direccion_barra_maquina = INDEFINIDA;
 
-    // Sumo 2 por la barra de título y el muro superior
-	juego->jugador.y = juego->maquina.y = ((juego->altoTablero - BARRA_Y_INICIAL) / 2) + 2;
+	juego->jugador.y = juego->maquina.y = ((juego->altoTablero - BARRA_Y_INICIAL) / 2) - (BARRA_Y_INICIAL / 2) + juego->inicio_tablero_y;
 	juego->jugador.largo_actual = juego->maquina.largo_actual = BARRA_Y_INICIAL;
-    juego->jugador.ticks_mover = juego->maquina.ticks_mover = 50000;
+    juego->jugador.ticks_mover = juego->maquina.ticks_mover = 50000; // CLOCKS_PER_SEC / 10;
     // La máquina inicia normalmente, sin tener limitada su reacción
     juego->ini_limite_reaccion_maquina = clock();
     juego->fin_limite_reaccion_maquina = clock();
+    // Los items deben inicializarse todos inactivos
+    inicializar_vector_item(juego);
 
 	juego->puntos = 0;
 	juego->modo = AVENTURA;
@@ -64,6 +67,11 @@ Juego *juego_ini(void)
 	juego->nivel = 1;
 
 	inicializar_bola(juego);
+
+	// Inicializar tabla de mejores puntajes, recordar que es un miembro de la estructura del juego
+	iniciar_tabla_mejores_puntajes(juego);
+	// Como la tabla de mejores puntajes está vacía, la leo desde disco, si existe
+	leer_tabla_mejores_puntajes(juego);
 
     // Retorno del puntero a la estructura creada
 	return juego;
@@ -73,6 +81,7 @@ void juego_fin(Juego **juego)
 {
     if(*juego != NULL)
     {
+        finalizar_tabla_mejores_puntajes(*juego);
         // Destruir memoria utilizada por variables del juego
         free(*juego);
         // Marcar que el juego no está inicializado

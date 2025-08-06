@@ -4,7 +4,7 @@
 #include <ncurses.h>        // por initscr, noecho, keypad, stdscr, endwin
 #include <string.h>         // por strcpy
 #include "mostrar_menu.h"   // por mostrar_menu
-#include "tabla_puntajes.h" // por iniciar_tabla_mejores_puntajes, mostrar_tabla_puntajes, leer_tabla_mejores_puntajes, finalizar_tabla_mejores_puntajes
+#include "tabla_puntajes.h" // por mostrar_tabla_puntajes
 #include "juego_ini.h"      // por juego_ini
 #include "juego_correr.h"   // por juego_correr
 #include "juego.h"          // por Juego
@@ -13,7 +13,8 @@
 
 int main(int argc, char *argv[])
 {
-	// Inicializar ncurses
+	// Inicializar ncurses, el comportamiento de la librería tanto en Linux como en Windows es muy bueno,
+	// se emplea para logtrar mayor fluidez en el juego
     if (initscr() == NULL)
     {
         if (fputs("Error: Al inicializar ncurses.\n\r", stderr) == EOF)
@@ -71,19 +72,16 @@ int main(int argc, char *argv[])
 	inicializar_delta_angulo();
 	// Inicialización del juego
 	Juego *juego = juego_ini();
-	// Inicializar tabla de mejores puntajes, recordar que es un miembro de la estructura del juego
-	iniciar_tabla_mejores_puntajes(juego);
-	// Como la tabla de mejores puntajes está vacía, la leo desde disco, si existe
-	leer_tabla_mejores_puntajes(juego);
 	unsigned char noSalir = 1;
 	while(noSalir)
 	{
 		switch(mostrar_menu(juego))
 		{
 		case 0: // Comenzar partida
-			juego_correr(juego);
+			juego_correr(juego); // corre el juego por lapso de una partida completa
             // Destruir el juego e inicializarlo nuevamente para nuevos valores
             juego_fin(&juego);
+            // Reiniciar una nueva partida
             juego = juego_ini();
 			break;
 		case 1: // Ver tabla de puntajes
@@ -94,7 +92,6 @@ int main(int argc, char *argv[])
 			break;
 		}
 	}
-	finalizar_tabla_mejores_puntajes(juego);
     juego_fin(&juego);
 	// Finalizar ncurses
 	endwin();

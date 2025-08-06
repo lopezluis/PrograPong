@@ -37,7 +37,8 @@ void mostrar_barra_jugador(Juego *juego)
 
 void mostrar_barra_maquina(Juego *juego)
 {
-	// Idem mostrar_barra_jugador
+	// El campo de juego con coordenada y para mvaddch, es desde la fila 2 hasta juego->altoTablero + 2, el alto de la pantalla - 3, es relativo a la política de la barra de estado
+	// Recordar que las coordenadas para mvaddch, están invertidas en relación a las funciones para modo gráfico habituales, es decir, primer parámetro y, segundo parámetro x
 	for(unsigned char j = 0; j < juego->maquina.largo_actual; j++)
 	{
 		for(unsigned char i = 0; i < BARRA_X; i++)

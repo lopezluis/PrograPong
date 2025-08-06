@@ -3,13 +3,13 @@
 
 #include <time.h> // por time_t, clock_t
 
-/// Zona de constantes
+// Zona de macros
 #define PROGRAMA_TITULO "PrograPong"
 #define PROGRAMA_LARGO 10
 #define DESARROLLADOR_TITULO "Desarrollado por Luis Fernando López"
 #define DESARROLLADOR_LARGO 36
 #define CANTIDAD_HALL_OF_FAME 5   // Cantidad de mejores puntajes que serán persistidos
-#define ESPACIO_NOMBRE_JUGADOR 10 // Cantidad de caracteres máximo que puede tener un jugador en el hall of fame
+#define ESPACIO_NOMBRE_JUGADOR 10 // Cantidad de caracteres máximo que puede tener un jugador en el hall of fame, recordar que cambiar este ancho invalida el archivo de mejores puntajes
 #define BARRA_X 2                 // tamaño de la barra en el eje X
 #define BARRA_Y_INICIAL 5         // tamaño inicial de la barra
 #define BARRA_Y_LARGO 7           // tamaño largo
@@ -24,8 +24,8 @@
 // #define TABLERO_X 50
 // #define TABLERO_Y 25
 // En su lugar definimos las dimenciones mínmas que debe tener el tablero, caso que no se cumplan, detiene la ejecución mostrando el mensaje de error correspondiente
-#define TABLERO_X_MINIMO 50
-#define TABLERO_Y_MINIMO 25
+#define TABLERO_X_MINIMO 80
+#define TABLERO_Y_MINIMO 16
 
 // Caracteres graficables
 #define BOLA_CHAR 'O'
@@ -53,8 +53,11 @@ typedef enum {INDEFINIDA=0, HACIA_ARRIBA=1, HACIA_ABAJO=2} DireccionBarra;
 // El dibujo está establecido por definición en el pdf por repetición del caracter BARRA_CHAR, por lo tanto, la matriz dibujo, no es necesaria
 // La coordenada y nunca puede ser negativa, por lo que se define con un tipo de datos positivo
 // El largo actual solo puede tomar los valores BARRA_Y_INICIAL, BARRA_Y_LARGO y BARRA_Y_CORTO, por lo tanto nunca es negativo
-// Los ticks_mover nunca serán negativos
-// Los ticks_efecto nunca serán negativos
+// ticks_mover nunca serán negativos pese a que clock_t los admite
+// ticks_mover es la cantidad de ticks que faltan para el próximo movimiento de la Barra de jugador o máquina
+// efecto_temporal no hace falta en la implementación actual
+// ticks_efecto es la cantidad de ticks en que debe desaparecer la acción del efecto obtenido por impacto de la Bola en un ítem
+// Las estructuras que tengan un tamaño impar o inadecuado para optimizaciones de acceso a datos, el compilador les agregará espacio ficticio automáticamente para adecuarlas
 typedef struct
 {
 //	char dibujo[BARRA_X][BARRA_Y_LARGO];
@@ -63,10 +66,10 @@ typedef struct
 //	int largo_actual;            // largo
 	unsigned char largo_actual;  // largo
 //	int ticks_mover;             // tiempo restante en frames/ticks para efectuar movimiento
-	clock_t ticks_mover;         // tiempo restante en frames/ticks para efectuar movimiento
+	clock_t ticks_mover;         // cantidad de ticks en el cual la barra debe realizar el siguiente movimiento
 //	int efecto_temporal;         // si se desea almacenar el tipo de item
 //	int ticks_efecto;            // tiempo restante en frames/ticks del efecto del ítem modificador obtenido
-	clock_t ticks_efecto;        // tiempo restante en frames/ticks del efecto del ítem modificador obtenido
+	clock_t ticks_efecto;        // cantidad de ticks en el cual debe desaparecer el efecto del ítem modificador obtenido
 } Barra;
 
 // Estructura Items
@@ -96,7 +99,7 @@ typedef struct
 // Los pimeros 2 bits indican con un poco de imaginación, la esquina de la pantalla, hacia donde se dirige la Bola.
 // Entonces int(angulo/16384) devolverá un número de 0 a 3, correspondiente al cuadrante donde se dirige la Bola, 16384 es 2 elevado (a 16 bits - 2).
 // Definiendo angulo para que tenga estos valores, me ahorro tener que verificar si ocurre un desbordamiento del ángulo, es decir, el desbordamiento se autoacomoda.
-// Los ticks_mover nunca serán negativos y se asume que no tendrá un valor mayor a 65535. Igualmente los reemplazamos por en instante en que se debe mover la Bola.
+// ticks_mover nunca será negativo y se asume que no tendrá un valor mayor a 65535. Igualmente lo ponemos de tipo clock_t para que quede consecuente.
 typedef struct
 {
 //	char simbolo;
@@ -134,8 +137,8 @@ typedef struct
     // No necesariamente el tablero inicia en las coordsenadas de la pantalla (0, 0), por lo tanto se declaran los siguientes 2 miembros:
 	unsigned short inicio_tablero_x;
 	unsigned short inicio_tablero_y;
-	unsigned short anchoTablero;
-	unsigned short altoTablero;
+	unsigned short anchoTablero;     // Es el ancho del campo de juego, por definición en esta implementación es igual al ancho de la pantalla
+	unsigned short altoTablero;      // Es el alto del campo de juego, excluídos la barra de título. ambos muros y la barra de estado
 
 //	char pantalla[TABLERO_Y][TABLERO_X+1];
 

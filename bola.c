@@ -6,6 +6,7 @@
 #include "reaccion_maquina.h" // por quitar_limite_reaccion_maquina
 #include "buffer_teclado.h"   // por vaciar_buffer_teclado
 #include "item.h"             // por bola_encima_item
+#include "mover_jugador.h"    // por mostrar_barra_jugador, mostrar_barra_maquina, borrar_toda_barra_jugador, borrar_toda_barra_maquina
 
 double delta_angulo[16384]; // 91 grados en el sistema sexagecimal 91*182.044444444444-1, desde 0 hasta 16383
 
@@ -81,6 +82,21 @@ void inicializar_bola(Juego *juego)
 	juego->bola.ticks_mover = CLOCKS_PER_SEC / 10;
 	// Cuando inicia una bola, la máquina tiene reacción plena
 	quitar_limite_reaccion_maquina(juego);
+    // Cuando inicia una bola, ambos jugadores comienzan a jugar con su barra centrada
+	juego->jugador.y = juego->maquina.y = ((juego->altoTablero - BARRA_Y_INICIAL) / 2) - (BARRA_Y_INICIAL / 2) + juego->inicio_tablero_y;
+    // Cuando inicia una bola, ambos jugadores tienen una barra con alto normal
+	juego->jugador.largo_actual = juego->maquina.largo_actual = BARRA_Y_INICIAL;
+    // Cuando inicia una bola el jugador tienen la velocidad estándard en su barra sin efectos
+    juego->jugador.ticks_mover = 50000; // CLOCKS_PER_SEC / 10;
+    juego->jugador.ticks_efecto = 0;
+    borrar_toda_barra_jugador(juego);
+    mostrar_barra_jugador(juego);
+    // Cuando inicia una bola la máquina tienen la velocidad estándard en su barra sin efectos
+    juego->maquina.ticks_mover = 50000; // CLOCKS_PER_SEC / 10;
+    juego->maquina.ticks_efecto = 0;
+    borrar_toda_barra_maquina(juego);
+    mostrar_barra_maquina(juego);
+    // Mostrar la bola
     mvaddch(COORDENADA_Y_PANTALLA_BOLA(juego), COORDENADA_X_PANTALLA_BOLA(juego), BOLA_CHAR);
 }
 
@@ -164,7 +180,8 @@ void mover_bola(Juego *juego)
     juego->bola.x = (unsigned short)(juego->bola.xFino);
     juego->bola.y = (unsigned short)(juego->bola.yFino);
 	// Verificar si la Bola rebota con la máquina
-    if ((juego->bola.x >= (juego->anchoTablero - 2 - BARRA_X)) && (juego->bola.y >= juego->maquina.y) && (juego->bola.y <= (juego->maquina.y + juego->maquina.largo_actual)))
+    if ((juego->bola.x >= (juego->anchoTablero - 2 - BARRA_X)) && (juego->bola.y >= juego->maquina.y) && (juego->bola.y <= (juego->maquina.y + juego->maquina.largo_actual)) &&
+        ((juego->bola.angulo < 16383 /* 90 grados en el sistema sexagecimal */) || (juego->bola.angulo > 49151 /* 270 grados en el sistema sexagecimal */)))
     {
         if((juego->bola.angulo >> 14) == 0)
         {
@@ -192,7 +209,8 @@ void mover_bola(Juego *juego)
         }
     }
 	// Verificar si la Bola rebota con el jugador
-    if ((juego->bola.x <= (1 + BARRA_X)) && (juego->bola.y >= juego->jugador.y) && (juego->bola.y <= (juego->jugador.y + juego->jugador.largo_actual)))
+    if ((juego->bola.x <= (1 + BARRA_X)) && (juego->bola.y >= juego->jugador.y) && (juego->bola.y <= (juego->jugador.y + juego->jugador.largo_actual)) &&
+        (juego->bola.angulo > 16383 /* 90 grados en el sistema sexagecimal */) && (juego->bola.angulo < 49151 /* 270 grados en el sistema sexagecimal */))
     {
         // Corregir BUG aqui, juego->bola.y se iguala a 0 al rabotar en el jugador y no advierto dónde
         if ((juego->bola.angulo >> 14) == 1)

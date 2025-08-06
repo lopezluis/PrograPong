@@ -1,9 +1,9 @@
 #include <stdlib.h>         // por exit, EXIT_SUCCESS, EXIT_FAILURE
-#include <ncurses.h>        // por clear, refresh, mvaddstr
+#include <ncurses.h>        // por clear, refresh, getch, mvaddstr
 #include <time.h>           // por strftime
 #include <stddef.h>         // por NULL
 #include <string.h>         // por strlen
-#include "juego.h"          // por Juego, PROGRAMA_TITULO, PROGRAMA_LARGO
+#include "juego.h"          // por Juego, PROGRAMA_TITULO, PROGRAMA_LARGO, DESARROLLADOR_TITULO, DESARROLLADOR_LARGO
 #include "buffer_teclado.h" // por vaciar_buffer_teclado
 
 void mostrar_tabla_puntajes(Juego *juego)
@@ -20,34 +20,32 @@ void mostrar_tabla_puntajes(Juego *juego)
 	else
 	{
 		mvaddstr(3, 0, "Mejores puntajes:");
-		// Saco la declaraciòn de i del for para que quede locar a este àmbito y utilizarla en Presione una tecla...
+		// Saco la declaración de i del for para que quede locar a este ámbito y utilizarla en Presione una tecla...
 		unsigned int i = 0;
-		while((i < 5) && ((juego->hallOfFame[i]).nombreJugador[0] != '\x00'))
+		while((i < CANTIDAD_HALL_OF_FAME) && ((juego->hallOfFame[i]).nombreJugador[0] != '\x00'))
 		{
-			if((juego->hallOfFame[i]).nombreJugador[0] == '\x00')
+			if((juego->hallOfFame[i].nombreJugador[0] == '\x00') || (juego->hallOfFame[i].instante == 0) || (juego->hallOfFame[i].puntaje == 0))
             {
                 break;
             }
             else
 			{
 			    // Los instantes tendrán un ancho fijo de 19 caracteres, strAux nunca tendrá más de 35 caracteres
-				char strInstante[20], strAux[36];
+				char strInstante[20], strAux[40];
 				struct tm *info;
 				// Convertir el valor de tipo time_t a estructura tm
 				info = localtime(&((juego->hallOfFame[i]).instante));
 				// Esta forma de mostrar fechas, es de mi agrado (ordenado por significancia de dìgitos), màs naturalmente serìa %d/%m/%Y %H:%M:%S
 				strftime(strInstante, sizeof(strInstante), "%Y-%m-%d %H:%M:%S", info);
-				sprintf(strAux, "%s %s %5d", (juego->hallOfFame[i]).nombreJugador, strInstante, (juego->hallOfFame[i]).puntaje);
+				sprintf(strAux, "%s %s %05d", (juego->hallOfFame[i]).nombreJugador, strInstante, (juego->hallOfFame[i]).puntaje);
 				mvaddstr(i + 5, 0, strAux);
 			}
             i++;
 		}
         mvaddstr(i + 6, (juego->anchoTablero - 45) / 2, "Presione una tecla para ir al menú principal.");
 	}
-
 	// Actualizar la pantalla
 	refresh();
-
 	// Esperar a que el usuario presione una tecla
 	while(getch() == ERR);
 }
@@ -161,11 +159,30 @@ void guardar_tabla_mejores_puntajes(Juego *juego)
 	fclose(archivo); // Cerrar el archivo
 }
 
+unsigned int ultimo_mejor_puntaje(Juego *juego)
+{
+    // Si hay algún espacio vacío en la última posición de la tabla, entonces el último puntaje es 0
+    if(juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].nombreJugador[0] == '\x00')
+    {
+        return 0;
+    }
+    unsigned int i = CANTIDAD_HALL_OF_FAME - 1;
+    while((i > 0) && (juego->hallOfFame[i].nombreJugador[0] == '\x00'))
+    {
+        i--;
+    }
+    if(juego->hallOfFame[i].nombreJugador[0] == '\x00')
+    {
+        return 0;
+    }
+    return juego->hallOfFame[i].puntaje;
+}
+
 void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
 {
-	// Es requerimiento que se llame a esta función con (puntajeObtenido > 0) && (puntajeObtenido > juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].puntaje (último de la tabla)).
+	// Es requerimiento que se llame a esta función con (puntajeObtenido > 0) && (puntajeObtenido > último mejor puntaje).
 	// Por las dudas lo verificamos, si este código se reutiliza, puede ser una verificación necesaria
-	if((puntajeObtenido == 0) && (puntajeObtenido <= juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].puntaje))
+	if((puntajeObtenido == 0) && (puntajeObtenido <= ultimo_mejor_puntaje(juego)))
 	{
 		return;
 	}
@@ -216,7 +233,7 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
 				char caracter;
                 switch(caracter = getch())
                 {
-                case '\x07': // Backspace
+                case '\x07': // Backspace, tener en cuenta que en Windows, este valor es '\x08'
                     if(k > 0)
                     {
                         k--;
@@ -249,14 +266,4 @@ void agregar_nuevo_record(Juego *juego, unsigned int puntajeObtenido)
 	guardar_tabla_mejores_puntajes(juego);
 	mvaddstr(juego->altoTablero + 3, 40, "                                        ");
 	mvaddstr(juego->altoTablero + 4, 40, "                                       ");
-}
-
-unsigned int ultimo_mejor_puntaje(Juego *juego)
-{
-    // Si hay algún espacio vacío entonces el último puntaje es 0
-    if(juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].nombreJugador[0] == '\x00')
-    {
-        return 0;
-    }
-    return juego->hallOfFame[CANTIDAD_HALL_OF_FAME - 1].puntaje;
 }

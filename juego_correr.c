@@ -8,13 +8,13 @@
 #include "item.h"           // por item_procesar
 #include "buffer_teclado.h" // por vaciar_buffer_teclado
 
-#define PERMANECER_NO 0
-#define PERMANECER_SI 1
 #define ABANDONO_DESCARTA 0
 #define ABANDONO_CONFIRMA 1
+#define ABANDONO_NO 0
+#define ABANDONO_SI 1
 
 // Este función es privada de esta fuente, no debe estar en el encabezado
-unsigned char finalizar_juego(Juego *juego, unsigned char abandono)
+unsigned char verificar_tabla_puntaje(Juego *juego, unsigned char abandono)
 {
     unsigned char confirma = ABANDONO_DESCARTA;
     // Si abandona, puede haber ingresado igualmente en el hall of fame
@@ -95,8 +95,10 @@ void juego_correr(Juego *juego)
 	mvprintw(juego->altoTablero + 4, 0, "Modo  : %s", (juego->modo == AVENTURA) ? "AVENTURA     " : ((juego->modo == SUPERVIVENCIA) ? "SUPERVIVENCIA" : "DESCONOCIDO  "));
 	mvprintw(juego->altoTablero + 4, 22, "| Nivel: %02hu", juego->nivel);
 
-	// Actualizar la pantalla, este refresh, creo que no hace falta, utilizamos el que está al final del while
-	//refresh();
+    mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para iniciar.       ");
+	// Actualizar la pantalla
+	refresh();
+    while(getch() == ERR);
 
     // Obtener cantidad de ticks del reloj
     clock_t ticks_reloj_actual = clock();
@@ -109,8 +111,7 @@ void juego_correr(Juego *juego)
     // La barra del jugador se controla por teclado, se genera el típico problema del uso de teclados en juegos: ver cómo reconocer tecla presionada durante lapso previo a repetición, e inter-repetición
     clock_t retardoRefrescoJugador = ticks_reloj_actual + juego->jugador.ticks_mover;
     clock_t retardoRefrescoMaquina = ticks_reloj_actual + juego->maquina.ticks_mover;
-	unsigned char permanecer = PERMANECER_SI;
-	while(permanecer)
+	while(1)
 	{
         if(ticks_reloj_actual > retardoRefrescoJugador)
         {
@@ -138,15 +139,19 @@ void juego_correr(Juego *juego)
                     mvaddstr(juego->altoTablero + 4, 40, "                                       ");
                     if((caracter == 'P') || (caracter == 'p'))
                     {
-                        permanecer = PERMANECER_NO;
-                        finalizar_juego(juego, 1);
+                        // Se desea ir al manú principal, se chequea si ingresa en el hall of fame
+                        verificar_tabla_puntaje(juego, ABANDONO_NO);
+                        // No hace falta verificar nada más en el juego
+                        return;
                     }
                 }
                 break;
             case ACCION_QUITAR:
-                if(finalizar_juego(juego, 1) == ABANDONO_CONFIRMA)
+                // Está abandonando, se pregunta para confirmar abandono y se chequea si ingresaa en el hall of fame
+                if(verificar_tabla_puntaje(juego, ABANDONO_SI) == ABANDONO_CONFIRMA)
                 {
-                    permanecer = PERMANECER_NO;
+                    // No hace falta verificar nada más en el juego
+                    return;
                 }
                 break;
             }
@@ -168,7 +173,8 @@ void juego_correr(Juego *juego)
             {
                 juego->jugador.y = juego->altoTablero - juego->jugador.largo_actual;
             }
-            juego->jugador.ticks_mover = CLOCKS_PER_SEC / 10;
+            // juego->jugador.ticks_mover en la práctica no tiene efecto, porque la definición indica de manera incorrecta, que se debe emplear el teclado para mover la barra del jugador
+            juego->jugador.ticks_mover = 50000; // CLOCKS_PER_SEC / 10;
             juego->jugador.ticks_efecto = 0;
             mostrar_barra_jugador(juego);
         }
@@ -195,7 +201,7 @@ void juego_correr(Juego *juego)
             {
                 juego->maquina.y = juego->altoTablero - juego->maquina.largo_actual;
             }
-            juego->maquina.ticks_mover = CLOCKS_PER_SEC / 10;
+            juego->maquina.ticks_mover = 50000; // CLOCKS_PER_SEC / 10;
             juego->maquina.ticks_efecto = 0;
             mostrar_barra_maquina(juego);
         }
@@ -232,15 +238,14 @@ void juego_correr(Juego *juego)
                     juego->bola.ticks_mover -= juego->bola.ticks_mover * 4 / 10;
                     if(juego->nivel == 11)
                     {
-                        // Ganó en modo AVENTURA
-                        permanecer = PERMANECER_NO;
-                        // Recordar que el acho máximo de la pantalla, puede ser de hasta 80 caracteres, por lo tanto, los textos, nunca deben superar los 40 caracteres
+                        // Ganó en modo AVENTURA. Recordar que el acho máximo de la pantalla, puede ser de hasta 80 caracteres, por lo tanto, los textos, nunca deben superar los 40 caracteres
                         mvaddstr(juego->altoTablero + 3, 40, "¡Felicidades! Ah ganado.                ");
                         // Recordar que cuando escribimos en juego->altoTablero + 4, debemos evitar la escritura de un caracter en la última fila y la última columna, para evitar el scroll de la pantalla completa
                         mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para iniciar.       ");
                         refresh();
                         while(getch() == ERR);
-                        finalizar_juego(juego, 0);
+                        // Verificar si debe ingresar en el hall of fame
+                        verificar_tabla_puntaje(juego, ABANDONO_NO);
                         return;
                     }
                 }
@@ -259,7 +264,8 @@ void juego_correr(Juego *juego)
             juego->vidas -= 1;
             if (juego->vidas == 0)
             {
-                finalizar_juego(juego, 0);
+                // Verificar si debe ingresasr en el hall of fame
+                verificar_tabla_puntaje(juego, ABANDONO_NO);
                 break;
             }
             else
