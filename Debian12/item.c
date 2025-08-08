@@ -16,7 +16,7 @@ void inicializar_vector_item(Juego *juego)
     }
 }
 
-// La función bola_encima_item se usa para verificar que la bola no caiga sobre un ítem al inicializarla
+// La función bola_encima_item se usa para verificar que la Bola no caiga sobre un ítem al inicializarla
 int bola_encima_item(Juego *juego, int identificador_item)
 {
     // ¿El ítem está inactivo?
@@ -60,19 +60,19 @@ void item_procesar(Juego *juego)
         // ¿El ítem está activo?
         if((juego->item[i].tipo & 0x80) != 0)
         {
-            // El item está activo, verificar si la bola toca el item
+            // El item está activo, verificar si la Bola toca el item
             if(bola_encima_item(juego, i))
             {
                 // Desactivar el item
                 juego->item[i].tipo &= 3;
-                // Hacer desaparecer el ítem, borraré la bola, pero no importa, reaparecerá en el próximo refresh
+                // Hacer desaparecer el ítem, borraré la Bola, pero no importa, reaparecerá en el próximo refresh
                 mvaddch(juego->item[i].y + juego->inicio_tablero_y, juego->item[i].x + juego->inicio_tablero_x, VACIO_CHAR);
                 mvaddch(juego->item[i].y + juego->inicio_tablero_y + 1, juego->item[i].x + juego->inicio_tablero_x, VACIO_CHAR);
                 mvaddch(juego->item[i].y + juego->inicio_tablero_y, juego->item[i].x + juego->inicio_tablero_x + 1, VACIO_CHAR);
                 mvaddch(juego->item[i].y + juego->inicio_tablero_y + 1, juego->item[i].x + juego->inicio_tablero_x + 1, VACIO_CHAR);
                 // Aplico el efecto a quien corresponda,
-                // no me parece del todo bien aplicar el ítem por cuadrante, porque puede que el efrecto caduque antes que la bola impacte a quien debe aplicarsele el efrecto
-                // mejor sería aplicar el efecto a quien será el próximo en pegarle a la bola
+                // no me parece del todo bien aplicar el ítem por cuadrante, porque puede que el efrecto caduque antes que la Bola impacte a quien debe aplicarsele el efrecto
+                // mejor sería aplicar el efecto a quien será el próximo en pegarle a la Bola
                 // Si a quien corresponde aplicar ya tiene otro efecto activo, se le aplica el efecto nuevo, dejando sin efecto el anterior
                 if(juego->bola.x < (juego->anchoTablero / 2))
                 {
@@ -80,7 +80,7 @@ void item_procesar(Juego *juego)
                     switch(juego->item[i].tipo)
                     {
                     case 0: // alargar-velocidad
-                        // Cuando la bola golpea el item de alargar barra, puede ser que antes venga de un bloquear, entonces es necesario eliminar la barra completa
+                        // Cuando la Bola golpea el item de alargar barra, puede ser que antes venga de un bloquear, entonces es necesario eliminar la barra completa
                         borrar_toda_barra_jugador(juego);
                         juego->jugador.largo_actual = BARRA_Y_LARGO;
                         // Si el jugador está cerca del muro inferior, el alargasmiento de la barra rompe el muro, evitar esto
@@ -97,7 +97,7 @@ void item_procesar(Juego *juego)
                         mostrar_barra_jugador(juego);
                         break;
                     case 1: // acortar+velocidad
-                        // Cuando la bola golpea el item de alargar barra, puede ser que antes venga de un bloquear, entonces es necesario eliminar la barra completa
+                        // Cuando la Bola golpea el item de alargar barra, puede ser que antes venga de un bloquear, entonces es necesario eliminar la barra completa
                         borrar_toda_barra_jugador(juego);
                         juego->jugador.largo_actual = BARRA_Y_CORTO;
                         juego->jugador.y++;
@@ -120,7 +120,7 @@ void item_procesar(Juego *juego)
                     switch(juego->item[i].tipo)
                     {
                     case 0: // alargar-velocidad
-                        // Cuando la bola golpea el item de alargar barra, puede ser que antes venga de un bloquear, entonces es necesario eliminar la barra completa
+                        // Cuando la Bola golpea el item de alargar barra, puede ser que antes venga de un bloquear, entonces es necesario eliminar la barra completa
                         borrar_toda_barra_maquina(juego);
                         juego->maquina.largo_actual = BARRA_Y_LARGO;
                         // Si la máquina está pegada a un muro, el alargasmiento de la barra rompe el muro, evitar esto
@@ -137,7 +137,7 @@ void item_procesar(Juego *juego)
                         mostrar_barra_maquina(juego);
                         break;
                     case 1: // acortar+velocidad
-                        // Cuando la bola golpea el item de alargar barra, puede ser que antes venga de un bloquear, entonces es necesario eliminar la barra completa
+                        // Cuando la Bola golpea el item de alargar barra, puede ser que antes venga de un bloquear, entonces es necesario eliminar la barra completa
                         borrar_toda_barra_maquina(juego);
                         juego->maquina.largo_actual = BARRA_Y_CORTO;
                         juego->maquina.y++;
@@ -161,7 +161,7 @@ void item_procesar(Juego *juego)
                 {
                     // Desactivar el item
                     juego->item[i].tipo &= 3;
-                    // El ítem desaparece, borreré loa bola, pero no importa, reaparecerá en el próximo refresh
+                    // El ítem desaparece, borreré la Bola, pero no importa, reaparecerá en el próximo refresh
                     mvaddch(juego->item[i].y + juego->inicio_tablero_y, juego->item[i].x + juego->inicio_tablero_x, VACIO_CHAR);
                     mvaddch(juego->item[i].y + juego->inicio_tablero_y + 1, juego->item[i].x + juego->inicio_tablero_x, VACIO_CHAR);
                     mvaddch(juego->item[i].y + juego->inicio_tablero_y, juego->item[i].x + juego->inicio_tablero_x + 1, VACIO_CHAR);
@@ -200,7 +200,7 @@ void item_procesar(Juego *juego)
                 juego->item[i].tipo = rand() % 3 + 128; // 0: alargar-velocidad, 1: acortar+velocidad, 2: bloquear zona
                 // La consigna dice que deben "desaparecer a los 5-10 segundos si no son golpeados", considero que es poco tiempo
                 juego->item[i].instante_desaparicion = clock() + (rand() % (6 * CLOCKS_PER_SEC)) + (5 * CLOCKS_PER_SEC);
-                // El item no debe aparecer encima de la bola, si el azar así lo provoca, quitar la situación
+                // El item no debe aparecer encima de la Bola, si el azar así lo provoca, quitar la situación
                 if(bola_encima_item(juego, i))
                 {
                     juego->item[i].x += 2 - juego->bola.x + juego->item[i].x;

@@ -89,12 +89,12 @@ typedef struct
     unsigned char tipo;            // 0: alargar-velocidad, 1: acortar+velocidad, 2: bloquear zona, 128: alargar-velocidad activo, 129: acortar+velocidad activo, 130: bloquear zona activo
 //	int activo;                    // si está activo en pantalla
 //	int ticks_restantes;           // tiempo activo restante en frames o ticks
-	clock_t instante_desaparicion; // momento que debe desaparecer
+	clock_t instante_desaparicion; // momento que el item debe desaparecer por no haber sido alcanzado por la Bola
 } Item;
 
 // Estructura Bola
 // La variable simbolo no es necesaria, dado que se define la macro BOLA_CHAR
-// Las coordenadas de la bola x e y nunca tendrán como valor, un número negativo, por lo que se define un tipo que solo acepta valores positivos
+// Las coordenadas de la Bola x e y nunca tendrán como valor, un número negativo, por lo que se define un tipo que solo acepta valores positivos
 // Se reemplaza dx y dy por el ángulo que lleva la Bola es de tipo unsigned short, por lo que el ángulo tandrá valores desde 0 a 65535.
 // Los pimeros 2 bits indican con un poco de imaginación, la esquina de la pantalla, hacia donde se dirige la Bola.
 // Entonces int(angulo/16384) devolverá un número de 0 a 3, correspondiente al cuadrante donde se dirige la Bola, 16384 es 2 elevado (a 16 bits - 2).
@@ -111,7 +111,7 @@ typedef struct
 	double yFino;          // posición vertical con decimales
 //	int dx;                // movimiento horizontal
 //	int dy;                // movimiento vertical
-	unsigned short angulo; // angulo que lleva la bola
+	unsigned short angulo; // angulo que lleva la Bola
 	clock_t ticks_mover;   // tiempo restante en para efectuar movimiento
 } Bola;
 
@@ -129,7 +129,7 @@ typedef struct
                           // 42  4D 61 72 74 69 6E 20 20 20 00  20 20 85 68 00 00 00 00  02 00 00 00 | Martin   .  .h........
                           // 58  4C 75 69 73 20 20 20 20 20 00  FD 1C 85 68 00 00 00 00  01 00 00 00 | Luis     .ý..h........
 
-// Estructura que almacena el tablero, ambas barras, la bola, los ítems y otros indicadores respecto al modo de juego
+// Estructura que almacena el tablero, ambas barras, la Bola, los ítems y otros indicadores respecto al modo de juego
 // la pantalla no es necesario mantenerla gracias al empleo de la librería ncurses que hace la experiencia de usuario más grata
 // Es una mala práctica especificar los campos de una estructura en plural, el nombre del vector items, se pasa a singular
 typedef struct

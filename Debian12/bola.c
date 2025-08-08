@@ -27,7 +27,7 @@ double delta_angulo[16384]; // 91 grados en el sistema sexagecimal 91*182.044444
 
 #define COORDENADA_X_PANTALLA_BOLA(juego) (juego->bola.x + juego->inicio_tablero_x)
 #define COORDENADA_Y_PANTALLA_BOLA(juego) (juego->bola.y + juego->inicio_tablero_y)
-// Tener en cuenta que cuando quiero conocer si la bola, por ejemplo, está dentro o fuera del tablero, debo comparar sus coordenadas con el ancho y alto del tablero, despreciando el inicio_tablero
+// Tener en cuenta que cuando quiero conocer si la Bola, por ejemplo, está dentro o fuera del tablero, debo comparar sus coordenadas con el ancho y alto del tablero, despreciando el inicio_tablero
 
 void inicializar_delta_angulo(void)
 {
@@ -40,12 +40,12 @@ void inicializar_delta_angulo(void)
 
 void inicializar_bola(Juego *juego)
 {
-    // Borro la bola. Tener en cuenta que las coordenadas de la bola están desde (x, y) = (0, 0), por lo tanto dewberán sumársele el lugar donde inicia el tablero
+    // Borro la Bola. Tener en cuenta que las coordenadas de la Bola están desde (x, y) = (0, 0), por lo tanto deberán sumársele el lugar donde inicia el tablero
     mvaddch(COORDENADA_Y_PANTALLA_BOLA(juego), COORDENADA_X_PANTALLA_BOLA(juego), VACIO_CHAR);
     // Inicializar la Bola
     juego->bola.x = juego->anchoTablero / 2;
     juego->bola.xFino = ((double)(juego->anchoTablero)) / 2;
-    // La posición vertical de la bola, por definición es al azar, recordar que las coordenadas de la bola son con relación al tablero que va de 0 hasta juego->altoTablero, quitando barra de título, muros e información inferior
+    // La posición vertical de la Bola, por definición es al azar, recordar que las coordenadas de la Bola son con relación al tablero que va de 0 hasta juego->altoTablero, quitando barra de título, muros e información inferior
     {
         int bola_cae_sobre_item = 1;
         while(bola_cae_sobre_item)
@@ -78,26 +78,25 @@ void inicializar_bola(Juego *juego)
         // Si desborda por valer de 49152 a 65535, no me interesa, se autoacomodará a un valor de 0 a 16383.
         juego->bola.angulo += 16384; // 90 grados en el sistema sexagecinal
     }
-    // TODO La cantidad de ticks en que debe moverse la bola cambiará a lo largo de la partida, para incrementar su velocidad, implementar este comportamiento
     // La velocidad de la Bola no cambia cuando algún jugador pierde un punto, continúa igual. Solo se resetea cuando inicia una nueva partida.
 	//juego->bola.ticks_mover = 50000; // CLOCKS_PER_SEC / 10;
-	// Cuando inicia una bola, la máquina tiene reacción plena
+	// Cuando inicia una Bola, la máquina tiene reacción plena
 	quitar_limite_reaccion_maquina(juego);
-    // Cuando inicia una bola, ambos jugadores comienzan a jugar con su barra centrada
+    // Cuando inicia una Bola, ambos jugadores comienzan a jugar con su barra centrada
 	juego->jugador.y = juego->maquina.y = ((juego->altoTablero - BARRA_Y_INICIAL) / 2) - (BARRA_Y_INICIAL / 2) + juego->inicio_tablero_y;
-    // Cuando inicia una bola, ambos jugadores tienen una barra con alto normal
+    // Cuando inicia una Bola, ambos jugadores tienen una barra con alto normal
 	juego->jugador.largo_actual = juego->maquina.largo_actual = BARRA_Y_INICIAL;
-    // Cuando inicia una bola el jugador tienen la velocidad estándard en su barra sin efectos
+    // Cuando inicia una Bola el jugador tienen la velocidad estándard en su barra sin efectos
     juego->jugador.ticks_mover = 50000; // CLOCKS_PER_SEC / 10;
     juego->jugador.ticks_efecto = 0;
     borrar_toda_barra_jugador(juego);
     mostrar_barra_jugador(juego);
-    // Cuando inicia una bola la máquina tienen la velocidad estándard en su barra sin efectos
+    // Cuando inicia una Bola la máquina tiene la velocidad estándard en su barra sin efectos
     juego->maquina.ticks_mover = 50000; // CLOCKS_PER_SEC / 10;
     juego->maquina.ticks_efecto = 0;
     borrar_toda_barra_maquina(juego);
     mostrar_barra_maquina(juego);
-    // Mostrar la bola
+    // Mostrar la Bola
     mvaddch(COORDENADA_Y_PANTALLA_BOLA(juego), COORDENADA_X_PANTALLA_BOLA(juego), BOLA_CHAR);
 }
 
@@ -108,7 +107,7 @@ void mostrar_bola(Juego *juego)
 
 void mover_bola(Juego *juego)
 {
-    // Se puede borrar y reescribir la bola porque el refresh de NCurses/PDCurses, evita el parpadeo de la bola
+    // Se puede borrar y reescribir la Bola porque el refresh de NCurses/PDCurses, evita el parpadeo de la Bola
     mvaddch(COORDENADA_Y_PANTALLA_BOLA(juego), COORDENADA_X_PANTALLA_BOLA(juego), VACIO_CHAR);
 	if(juego->bola.angulo < 16384 /* 90 grados en el sistema sexagecimal */)
 	{
@@ -117,13 +116,13 @@ void mover_bola(Juego *juego)
 		juego->bola.xFino += delta_angulo[16383 /* 90 grados en el sistema sexagecimal */ - juego->bola.angulo];
         // Arriba con índice del vector de 0 a 16383 equivalente al seno del ángulo, seno = ordenada porque la diagonal es 1
 		juego->bola.yFino -= delta_angulo[juego->bola.angulo];
-        // Verificar si la bola rebota en el muro superior, tener en cuenta que juego->bola.yFino es un double, por lo tanto, puede ser negativo
+        // Verificar si la Bola rebota en el muro superior, tener en cuenta que juego->bola.yFino es un double, por lo tanto, puede ser negativo
         if(juego->bola.yFino < 0)
         {
             // Cambiar el ángulo para que vaya derecha abajo
             juego->bola.angulo = (unsigned short)(65536.0 /* 360 grados en el sistema sexagesimal */ - ((double)(juego->bola.angulo)));
             // La definición del ejercicio solicita: la máquina tendrá un tiempo de reacción aleatorio a cambios de dirección
-            // ¿A cambios de diracción de la bola o a los de la barra de la máquina? Para cambio de dirección de la bola, habría que poner un "limitar_reaccion_maquina(juego);" en este punto
+            // ¿A cambios de diracción de la Bola o a los de la barra de la máquina? Para cambio de dirección de la Bola, habría que poner un "limitar_reaccion_maquina(juego);" en este punto
             // Asumo por sentido común, que la definición del ejercicio se refiere a cambios de dirección de la barra de la máquina
         }
 	}
@@ -136,7 +135,7 @@ void mover_bola(Juego *juego)
             juego->bola.xFino -= delta_angulo[juego->bola.angulo - 16384 /* 90 grados en el sistema sexagecimal */];
             // Arriba con índice de 16383 a 0 equivalente al coseno del ángulo, coseno = adyacente porque la diagonal es 1
             juego->bola.yFino -= delta_angulo[16383 /* 90 grados en el sistema sexagecimal */ - juego->bola.angulo + 16384 /* 90 grados en el sistema sexagecimal */];
-            // Verificar si la bola rebota en el muro superior, tener en cuenta que juego->bola.yFino es un double, por lo tanto, puede ser negativo
+            // Verificar si la Bola rebota en el muro superior, tener en cuenta que juego->bola.yFino es un double, por lo tanto, puede ser negativo
             if(juego->bola.yFino < 0)
             {
                 // Cambiar el ángulo para que vaya a izquierda abajo
@@ -152,7 +151,7 @@ void mover_bola(Juego *juego)
                 juego->bola.xFino -= delta_angulo[16383 /* 90 grados en el sistema sexagecimal */ - juego->bola.angulo + 32768 /* 180 grados en el sistema sexagecimal */];
                 // Abajo con índice de 0 a 16383 equivalente al seno del ángulo, seno = ordenada porque la diagonal es 1
                 juego->bola.yFino += delta_angulo[juego->bola.angulo - 32768 /* 180 grados en el sistema sexagecimal */];
-                // Verificar si la bola rebota en muro inferior, tener en cuenta que juego->bola.yFino es un double, por lo tanto, casteo altoTablero para comparar double con double
+                // Verificar si la Bola rebota en muro inferior, tener en cuenta que juego->bola.yFino es un double, por lo tanto, casteo altoTablero para comparar double con double
                 if(juego->bola.yFino > ((double)(juego->altoTablero) - 1.0))
                 {
                     // Cambiar el ángulo para que vaya a izquierda arriba
@@ -168,7 +167,7 @@ void mover_bola(Juego *juego)
                     juego->bola.xFino += delta_angulo[juego->bola.angulo - 49152 /* 270 grados en el sistema sexagecimal */];
                     // Abajo con índice de 16383 a 0 equivalente al coseno del ángulo, coseno = adyacente porque la diagoran es 1
                     juego->bola.yFino += delta_angulo[65535 /* 360 grados en el sistema sexagecimal */ - juego->bola.angulo];
-                    // Verificar si la bola rebota en muro inferior, tener en cuenta que juego->bola.yFino es un double, por lo tanto, casteo altoTablero para comparar double con double
+                    // Verificar si la Bola rebota en muro inferior, tener en cuenta que juego->bola.yFino es un double, por lo tanto, casteo altoTablero para comparar double con double
                     if(juego->bola.yFino > ((double)(juego->altoTablero) - 1.0))
                     {
                         // Cambiar el ángulo para que vaya a derecha arriba

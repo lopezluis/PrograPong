@@ -87,10 +87,10 @@ void juego_correr(Juego *juego)
 	// Mostrar las barra
 	mostrar_barra_jugador(juego);
 	mostrar_barra_maquina(juego);
-	// Mostrar la bola
+	// Mostrar la Bola
     mostrar_bola(juego);
 
-	// Mostrar información inferior: Puntos, Vidas, Modo y Nivel
+	// Mostrar barra de estado (información inferior): Puntos, Vidas, Modo y Nivel
 	mvprintw(juego->altoTablero + 3, 0, "Puntos: %05u", juego->puntos);
 	mvprintw(juego->altoTablero + 3, 22, "| Vidas: %02hu", juego->vidas);
 	mvprintw(juego->altoTablero + 4, 0, "Modo  : %s", (juego->modo == AVENTURA) ? "AVENTURA     " : ((juego->modo == SUPERVIVENCIA) ? "SUPERVIVENCIA" : "DESCONOCIDO  "));
@@ -206,22 +206,22 @@ void juego_correr(Juego *juego)
             juego->maquina.ticks_efecto = 0;
             mostrar_barra_maquina(juego);
         }
-		// Actualizar movimiento de la bola y verificación de colisiones
+		// Actualizar movimiento de la Bola y verificación de colisiones
 		if(ticks_reloj_actual > retardoRefrescoBola)
 		{
 			mover_bola(juego);
-			// TODO En la primera implementación vamos a temporizar los items igual que la bola, es casi seguro que necesiten su frecuencia de procesamiento individual
+			// TODO En la primera implementación vamos a temporizar los items igual que la Bola, es casi seguro que necesiten su frecuencia de procesamiento individual
             item_procesar(juego);
 			retardoRefrescoBola = ticks_reloj_actual + juego->bola.ticks_mover;
 		}
-		// Si estamos jugando en modo SUPERVIVENCIA, chequear si se debe acelerar la bola
+		// Si estamos jugando en modo SUPERVIVENCIA, chequear si se debe acelerar la Bola
         if((juego->modo == SUPERVIVENCIA) && (ticks_reloj_actual > retardoAcelBolaEnSuperv))
         {
-            // Acelerar la bola un 10%
-            juego->bola.ticks_mover -= (juego->bola.ticks_mover / 10);
+            // Acelerar la Bola un 10%
+            juego->bola.ticks_mover -= juego->bola.ticks_mover / 10;
             retardoAcelBolaEnSuperv = ticks_reloj_actual + (10 * CLOCKS_PER_SEC);
         }
-        // Verificar si la máquina no pudo devolver la bola y el jugador gana un punto
+        // Verificar si la máquina no pudo devolver la Bola y el jugador gana un punto
         if (juego->bola.x > (juego->anchoTablero - 1 - BARRA_X))
         {
             juego->puntos++;
@@ -235,7 +235,7 @@ void juego_correr(Juego *juego)
                     mvprintw(juego->altoTablero + 4, 22, "| Nivel: %02hu ", juego->nivel);
                     juego->vidas = 5;
                     mvprintw(juego->altoTablero + 3, 22, "| Vidas: %02hu", juego->vidas);
-                    // Acelerar la bola un 40%
+                    // Acelerar la Bola un 40%
                     juego->bola.ticks_mover -= juego->bola.ticks_mover * 4 / 10;
                     if(juego->nivel == 11)
                     {
@@ -257,17 +257,17 @@ void juego_correr(Juego *juego)
             while(getch() == ERR);
             mvaddstr(juego->altoTablero + 4, 40, "                                       ");
         }
-        // Verificar si el jugador no pudo devolver la bola y pierde una vida
+        // Verificar si el jugador no pudo devolver la Bola y pierde una vida
         if (juego->bola.x < 2)
         {
-            // No es necesario ocultar la bola
+            // No es necesario ocultar la Bola
             //mvaddch(juego->bola.y + juego->inicio_tablero_y, juego->bola.x + juego->inicio_tablero_x, VACIO_CHAR);
             juego->vidas -= 1;
             mvprintw(juego->altoTablero + 3, 22, "| Vidas: %02hu  ", juego->vidas);
             // No hace falta el refresh, se hará a continuación
             if (juego->vidas == 0)
             {
-                // Verificar si debe ingresasr en el hall of fame
+                // Verificar si debe ingresar en el hall of fame
                 verificar_tabla_puntaje(juego, ABANDONO_NO);
                 return;
             }
