@@ -13,7 +13,7 @@
 #define ABANDONO_NO 0
 #define ABANDONO_SI 1
 
-// Este función es privada de esta fuente, no debe estar en el encabezado
+// Este función es privada de esta fuente, no debe estar en el encabezado, ni en tabla_puntajes
 unsigned char verificar_tabla_puntaje(Juego *juego, unsigned char abandono)
 {
     unsigned char confirma = ABANDONO_DESCARTA;
@@ -21,15 +21,16 @@ unsigned char verificar_tabla_puntaje(Juego *juego, unsigned char abandono)
     if(abandono)
     {
         // Recordar que cuando escribimos en juego->altoTablero + 4, debemos evitar la escritura de un caracter en la última fila y la última columna, para evitar el scroll de la pantalla completa
-        mvaddstr(juego->altoTablero + 4, 40, "¿Seguro abandona? Presione S o N.     ");
+        mvaddstr(juego->altoTablero + 4, 40, "¿Abandona? S abandona,otra tecla cont.");
         refresh();
         char caracter;
         while((caracter = getch()) == ERR);
         mvaddstr(juego->altoTablero + 4, 40, "                                      ");
-        if((caracter == 'S') || (caracter == 's'))
+        if((caracter != 'S') && (caracter != 's'))
         {
-            confirma = ABANDONO_CONFIRMA;
+            return confirma;
         }
+        confirma = ABANDONO_CONFIRMA;
     }
     if((juego->puntos > 0) && (juego->puntos > ultimo_mejor_puntaje(juego)))
     {
@@ -262,15 +263,16 @@ void juego_correr(Juego *juego)
             // No es necesario ocultar la bola
             //mvaddch(juego->bola.y + juego->inicio_tablero_y, juego->bola.x + juego->inicio_tablero_x, VACIO_CHAR);
             juego->vidas -= 1;
+            mvprintw(juego->altoTablero + 3, 22, "| Vidas: %02hu  ", juego->vidas);
+            // No hace falta el refresh, se hará a continuación
             if (juego->vidas == 0)
             {
                 // Verificar si debe ingresasr en el hall of fame
                 verificar_tabla_puntaje(juego, ABANDONO_NO);
-                break;
+                return;
             }
             else
             {
-                mvprintw(juego->altoTablero + 3, 22, "| Vidas: %02hu  ", juego->vidas);
                 inicializar_bola(juego);
                 vaciar_buffer_teclado(juego);
                 mvaddstr(juego->altoTablero + 4, 40, "Presione una tecla para jugar.         ");
