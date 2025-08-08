@@ -1,5 +1,6 @@
-#include <curses.h> // por clear, mvaddstr, refresh, getch, endwin
-#include <stdlib.h> // por exit, EXIT_FAILURE
+#include <curses.h>  // por clear(comentado), mvaddstr(comentado), refresh(comentado), getch(comentado), endwin
+#include <stdio.h>   // por puts
+#include <stdlib.h>  // por exit, EXIT_FAILURE
 
 void mostrar_error(const char *mensaje)
 {

@@ -78,8 +78,8 @@ void inicializar_bola(Juego *juego)
         // Si desborda por valer de 49152 a 65535, no me interesa, se autoacomodará a un valor de 0 a 16383.
         juego->bola.angulo += 16384; // 90 grados en el sistema sexagecinal
     }
-    // TODO La cantidad de ticks en que debe moverse la bola cambiará a lo largo de la partida, para incrementar su velocidad, implementar este comportamiento
-	juego->bola.ticks_mover = CLOCKS_PER_SEC / 10;
+    // La velocidad de la Bola no cambia cuando algún jugador pierde un punto, continúa igual. Solo se resetea cuando inicia una nueva partida.
+	//juego->bola.ticks_mover = CLOCKS_PER_SEC / 10; // 50000;
 	// Cuando inicia una bola, la máquina tiene reacción plena
 	quitar_limite_reaccion_maquina(juego);
     // Cuando inicia una bola, ambos jugadores comienzan a jugar con su barra centrada

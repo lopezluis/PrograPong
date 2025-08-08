@@ -122,7 +122,7 @@
 
 1752457279 c:\users\sai\documents\proyectos\ansi_c\prograpong\buffer_teclado.h
 
-1754593078 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\bola.c
+1754673471 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\bola.c
 	<stdlib.h>
 	<curses.h>
 	<time.h>
@@ -133,13 +133,13 @@
 	"item.h"
 	"mover_jugador.h"
 
-1754587264 c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\juego.h
+1754674193 c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\juego.h
 	<time.h>
 
 1752626317 c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\reaccion_maquina.h
 	"juego.h"
 
-1754585620 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\buffer_teclado.c
+1754673713 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\buffer_teclado.c
 	<time.h>
 	<curses.h>
 	"juego.h"
@@ -154,7 +154,7 @@
 1752364973 c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\mover_jugador.h
 	"juego.h"
 
-1754588202 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\juego_correr.c
+1754678963 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\juego_correr.c
 	<curses.h>
 	<stdlib.h>
 	<time.h>
@@ -177,7 +177,7 @@
 1754343539 c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\buffer_teclado.h
 	"juego.h"
 
-1754589203 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\juego_ini.c
+1754679615 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\juego_ini.c
 	<stdio.h>
 	<stddef.h>
 	<stdlib.h>
@@ -215,16 +215,17 @@
 
 1751755818 c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\mostrar_error.h
 
-1754346260 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\mostrar_error.c
+1754677804 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\mostrar_error.c
 	<curses.h>
+	<stdio.h>
 	<stdlib.h>
 
-1754346515 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\mostrar_menu.c
+1754677975 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\mostrar_menu.c
 	<curses.h>
 	<stdlib.h>
 	"juego.h"
 
-1754590631 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\mover_jugador.c
+1754678453 source:c:\users\lsfrn\documents\proyectos\ansi_c\prograpong\mover_jugador.c
 	<curses.h>
 	"juego.h"
 	"reaccion_maquina.h"

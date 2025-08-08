@@ -1,6 +1,6 @@
-#include <curses.h> // por clear, mvaddstr, refresh
-#include <stdlib.h> // por exit, EXIT_SUCCESS, EXIT_FAILURE
-#include "juego.h"  // por Juego
+#include <curses.h>  // por clear, mvaddstr, refresh
+#include <stdlib.h>  // por exit, EXIT_SUCCESS, EXIT_FAILURE
+#include "juego.h"   // por Juego
 
 int mostrar_menu(Juego *juego)
 {

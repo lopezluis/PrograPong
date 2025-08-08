@@ -10,10 +10,10 @@ void mostrar_barra_jugador(Juego *juego)
 	{
 		for(unsigned char i = 0; i < BARRA_X; i++)
 		{
-			mvaddch(juego->jugador.y + j + juego->inicio_tablero_y, i + juego->inicio_tablero_x + 1, BARRA_CHAR);
+			mvaddch(juego->jugador.y + j + juego->inicio_tablero_y, i + 1 + juego->inicio_tablero_x, BARRA_CHAR);
 		}
 	}
-	// Borrar el excedente superior de la barra del jugador, si corresponde
+	// Borrar el excedente superior de la barra del jugador, si corresponde.
 	// Recordar que la coordenada y de la barra del jugador está en relación al tablero, que se despliaga desde 0 hasta juego->altoTablero
 	// Además recordar que la coordenada x de la barra del jugador es fija en 1 por el espacio 0 detrás de la barra, con relación ai inicio del tablero juego->inicio_tablero_x
 	if(juego->jugador.y > 0)
@@ -31,6 +31,8 @@ void mostrar_barra_jugador(Juego *juego)
 			mvaddch(juego->jugador.y + juego->jugador.largo_actual + juego->inicio_tablero_y, i + 1 + juego->inicio_tablero_x, VACIO_CHAR);
 		}
 	}
+	// Actualizar la pantalla, no hace falta, se actualizará en juego_correr
+	//refresh();
 }
 
 void mostrar_barra_maquina(Juego *juego)
@@ -60,6 +62,8 @@ void mostrar_barra_maquina(Juego *juego)
 			mvaddch(juego->maquina.y + juego->maquina.largo_actual + juego->inicio_tablero_y, juego->anchoTablero - 1 - BARRA_X + i + juego->inicio_tablero_x, VACIO_CHAR);
 		}
 	}
+	// Actualizar la pantalla, no hace falta, se actualizará en juego_correr
+	//refresh();
 }
 
 void mover_jugador_arriba(Juego *juego)
@@ -127,7 +131,7 @@ void borrar_toda_barra_jugador(Juego *juego)
 	{
 		for(unsigned char i = 0; i < BARRA_X; i++)
 		{
-			mvaddch(j + juego->inicio_tablero_y, i + juego->inicio_tablero_x + 1, VACIO_CHAR);
+			mvaddch(j + juego->inicio_tablero_y, i + 1 + juego->inicio_tablero_x, VACIO_CHAR);
 		}
 	}
 }

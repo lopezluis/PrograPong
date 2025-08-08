@@ -1,6 +1,6 @@
-#include <time.h>   // por clock_t, clock, CLOCKS_PER_SEC
-#include <curses.h> // por getch, mvaddstr, refresh
-#include "juego.h"  // por Juego
+#include <time.h>    // por clock_t, clock, CLOCKS_PER_SEC
+#include <curses.h>  // por getch, mvaddstr, refresh
+#include "juego.h"   // por Juego
 
 void vaciar_buffer_teclado(Juego *juego)
 {

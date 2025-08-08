@@ -67,6 +67,8 @@ Juego *juego_ini(void)
 	juego->nivel = 1;
 
 	inicializar_bola(juego);
+    // La velocidad de la Bola no cambia cuando algún jugador pierde un punto, continúa igual. Solo se resetea cuando inicia una nueva partida, es decir, aqui.
+	juego->bola.ticks_mover = CLOCKS_PER_SEC / 10; // En Debian 12 100000;
 
 	// Inicializar tabla de mejores puntajes, recordar que es un miembro de la estructura del juego
 	iniciar_tabla_mejores_puntajes(juego);

@@ -119,7 +119,6 @@ typedef struct
 // Así es como se debe definir un tipo de datos cuyo formato es una estructura con diferentes campos
 typedef struct
 {
-	//char nombreJugador[ESPACIO_NOMBRE_JUGADOR];
 	char *nombreJugador;  // puntero a 10 caracteres, los nueve correspondientes alo nombre del jugador más 1 del 0 como fin de string
 	time_t instante;      // 8 bytes
 	unsigned int puntaje; // 4 bytes
