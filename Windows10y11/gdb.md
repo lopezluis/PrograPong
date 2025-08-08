@@ -2,7 +2,7 @@
 
 ## Introducción
 
-GDB, el depurador de GNU, es una herramienta esencial para depurar programas en lenguajes como C, C++ y otros. A continuación comandos útiles para empezar:
+GDB, el depurador de GNU, es una herramienta esencial para depurar programas en lenguajes como C, C++ y otros. Aquí hay algunos comandos útiles para empezar:
 
 ### Comandos de control de ejecución
 
@@ -51,11 +51,11 @@ GDB, el depurador de GNU, es una herramienta esencial para depurar programas en 
 	* set logging on: Inicia el registro de la sesión de GDB en un archivo.
 	* set logging off: Detiene el registro de la sesión de GDB.
 
-## Para prograPongPAyED
+## Para pongPAyED
 
 Ejecuto:
 
-	gdb prograPongPAyED
+	gdb pongPAyED
 
 Mostrar la versión utilizada del gdb:
 
@@ -63,7 +63,7 @@ Mostrar la versión utilizada del gdb:
 
 Me informa:
 
-	GNU gdb (Debian 13.1-3) 13.1
+	GNU gdb (Debian 8.2.1-2+b3) 8.2.1
 
 Para iniciar la ejecución del programa y detenerse en la primera instrucción de la función principal (main):
 
@@ -72,7 +72,7 @@ Para iniciar la ejecución del programa y detenerse en la primera instrucción d
 Me informa:
 
 	Temporary breakpoint 1 at 0x142c: file main.c, line 14.
-	Starting program: prograPong
+	Starting program: unlp/PAyED2025/trabajosEspeciales/2025semestre1/pongPAyED
 	Temporary breakpoint 1, main (argc=1, argv=0x7fffffffdd08) at main.c:14
 	14              if (argc > 1)
 
@@ -105,8 +105,3 @@ Elimino alguno, con el comando **delete** que creo no tiene abreviatura, es nece
 
 	delete 2
 
-## Comparar fuentes
-
-Para comparar dos archivos fuentes en lenguaje c:
-
-	/usr/bin/diff --report-identical-files --side-by-side --tabsize=4 --expand-tabs --ignore-trailing-space --ignore-space-change --text mover_jugador.c ../PrograPong/Debian12/mover_jugador.c

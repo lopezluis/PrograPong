@@ -1,10 +1,12 @@
-# PrograPong
+# Pong
 
 ## Introducción
 
-El desarrollo presente en este directorio corresponde al antiguo juego electrónico de las casas de videojuegos muy populares en las peatonales, llamado Pong, de 1972, considerado el primer videojuego "comercial". Este es el desarrollo en modo texto del popular videojuego.
+El desarrollo presente en este directorio corresponde al antiguo juego electrónico de las casas de videojuegos muy populares en las peatonales, llamado Pong. Este desarrollo ha sido propuesto por la cátedra de "Programación Algoritmos y Estructura de Datos" como trabajo especial para el primer semestre del año 2025 de Ingeniería de la UNLP, cuyos detalles o requerimiento de implementación están en el siguiente documento pdf:
 
-Desarrollado por mi anteriormente, en modo gráfico:
+	simon/unlp/PAyED2025/trabajosEspeciales/2018semestre2pong.pdf
+
+Desarrollado por mi:
 
 	find . -depth -type f | grep -E "[Pp]ong"
 
@@ -33,7 +35,7 @@ Resultados:
 	SDL2/pong/paleta.h
 	SDL2/pong/lado.png
 
-Lo he desarrollado tanto usando SFML, como SDL2, con éste último logré la versión más acabada o mejor, puede ejecutarse a 40k cuadros por segundo, extremádamente exagerado, teniendo en cuenta que los monitores convencionales refrescan a 60 cuadros por segundo.
+Lo he desarrollado tanto usando SFML, como SDL2, con éste último logré la versión más acabada o mejor, puede ejecutarse a 40k cuadros por segundo, extremádamente exagerado, cuando los monitores convencionales refrescan a 60 cuadros por segundo.
 
 ## Desarrollo
 
@@ -47,7 +49,7 @@ Para poder obtener la cantidad de columnas y filas de la terminal en Debian, pod
 
 ### Para depurar
 
-Para visualizar valores de variables, puedo utilizar el siguinte código:
+Para visualizar valores de vaariables, puedo utilizar el siguinte código:
 
     // TODO: borrar visualizaciones para depuración
 	{
@@ -149,11 +151,13 @@ Trayectoria de objetos en el tablero de juego. Por ejemplo la Bola sobre el camp
 	* > 180 y < 270, deberá restarsele 90 grados. Significa que la Bola va de derecha a izquierda y está rebotando en la pared inferior.
 	* > 270, deberá restarsele 90 grados. Significa que la Bola va de derecha a izquierda y está rebotando en la pared inferior.
 
-Ángulo: Primero pensé, para definir el ángulo de la Bola, la relación entre los miembros dx y dy de la estructura Bola. Es incorrecto dado que si ambos miembros valieran 0, se generaría una inconsistencia. Significaría pelota detenida y en el juego pong, nunca puede estar la pelota detenida. Por ejemplo, si el par ordenado (dx,dy) es (1,1) significa 45 grados.
+Ángulo: La cátedra propone para definir el ángulo de la Bola, la relación entre los miembros dx y dy de la estructura Bola. Es incorrecto dado que si ambos miembros valieran 0, se generaría una inconsistencia. Significaría pelota detenida y en el juego pong, nunca puede estar la pelota detenida. Por ejemplo, si el par ordenado (dx,dy) es (1,1) significa 45 grados.
 
 ## Preguntas
 
-¿Es necesario hacerlo en modo texto? Naturalmente es mejor escribir este desarrollo en modo gráfico, este proyecto expresa que igualmente se puede lograr desarrollar un juego en modo texto y que resulte entretenido.
+El nombre de archivo es "Problema especial Programación 2S 2025.pdf" ¿el 2S significa segundo semestre? El título del archivo dice "Problema especial 1er semestre 2025", por lo tanto concordaría. Este trabajo es igual al "Trabajo Especial – Segundo Semestre de 2018" con algún agregado, quizás al copiarlo cambiaron el año y se olvidaron de cambiar el "2S" en el nombre de archivo.
+
+¿Es necesario hacerlo en modo texto? Es claro que Ing. del la UNLP prefiere trabajar en Linux, existen 2 entornos de desarrollo que son el SFML y el SDL2.
 
 SFML (Simple and Fast Multimedia Library o biblioteca multimedia sencilla y rápida) está escrito en C++, se destaca por su orientación a objetos y facilidad de uso, mientras que SDL2 (Simple DirectMedia Layer versión 2 o capa directa de medios simple versión 2) está escrito en C, ofrece un mayor control a bajo nivel y una amplia gama de funciones multimedia. La ventaja de utilizar ANSI C es el absoluto control del hardware, motivo por el cual existe una amplia gama de microcontroladores en el mercado, que se pueden programar en lenguaje C.
 
@@ -220,17 +224,3 @@ Si sos nuevo en desarrollo de juegos y preferís una biblioteca fácil de aprend
 Si necesitas un mayor control sobre el hardware y funciones multimedia, y estás dispuesto a lidiar con un poco más de complejidad, SDL2 es mejor opción.
 
 Ambos entornos son herramientas poderosas que pueden ayudarte a crear juegos y aplicaciones multimedia. Sería bueno probar ambas para ver cuál se adapta mejor a tu estilo de programación y a los requisitos de tu proyecto.
-
-## Subir a GitHub
-
-Asegurarse que existe el archivo **README.md** y que en la primera línea contiene **# PrograPong**, es decir, el nombre del repositorio de GitHub como título principal del documento markdown. Luego ejecutar los suguientes comandos, no sé cual **git remote** es el correcto:
-
-    git init
-    git add README.md
-    git add .
-    git commit -m "Primer commit"
-    git branch -M master
-    git remote set-url origin https://github.com/lopezluis/PrograPong.git
-    git remote set-url origin lopezluis@github.com:lopezluis/PrograPong.git
-    git remote set-url origin git@github.com:lopezluis/PrograPong.git
-    git push -u origin master
