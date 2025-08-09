@@ -4,10 +4,10 @@
 #include <time.h> // por time_t, clock_t
 
 // Zona de macros
-#define PROGRAMA_TITULO "PrograPong"
-#define PROGRAMA_LARGO 10
-#define DESARROLLADOR_TITULO "Desarrollado por Luis Fernando L\xA2pez"
-#define DESARROLLADOR_LARGO 36
+#define PROGRAMA_TITULO "PrograPong PAyED Ingenier\xA1\x61 UNLP"
+#define PROGRAMA_LARGO 32
+#define DESARROLLADOR_TITULO "Desarrollado por Sim\xA2n e Ignacio"
+#define DESARROLLADOR_LARGO 32
 #define CANTIDAD_HALL_OF_FAME 5   // Cantidad de mejores puntajes que serán persistidos
 #define ESPACIO_NOMBRE_JUGADOR 10 // Cantidad de caracteres máximo que puede tener un jugador en el hall of fame, recordar que cambiar este ancho invalida el archivo de mejores puntajes
 #define BARRA_X 2                 // tamaño de la barra en el eje X
