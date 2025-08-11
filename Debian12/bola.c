@@ -107,6 +107,9 @@ void mostrar_bola(Juego *juego)
 
 void mover_bola(Juego *juego)
 {
+    // El vector delta_angulo contiene los valores del seno de su índice, con un índice que representaría desde 0 a PI/2 radianes o 90 grados sexagecimales,
+    // por lo tanto, si se considera el mismo vector pero con sus índices en forma inversa de PI/2 radianes a 0, representarían los valores del coseno de esa inversión.
+    // Cuando la bola avanza una unidad, entonces avanza +- su seno o coseno, según cual sea el cuadrante al que apunta el ángulo que lleva la Bola.
     // Se puede borrar y reescribir la Bola porque el refresh de NCurses/PDCurses, evita el parpadeo de la Bola
     mvaddch(COORDENADA_Y_PANTALLA_BOLA(juego), COORDENADA_X_PANTALLA_BOLA(juego), VACIO_CHAR);
 	if(juego->bola.angulo < 16384 /* 90 grados en el sistema sexagecimal */)
